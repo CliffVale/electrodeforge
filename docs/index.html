@@ -381,6 +381,7 @@ const PARAM_DEFS = {
     {id:'fl',label:'Finger Length (mm)',min:2,max:20,step:0.5},
     {id:'bus',label:'Bus Bar (mm)',min:0.5,max:5,step:0.5},
     {id:'pad',label:'Pad Size (mm)',min:1,max:10,step:0.5},
+    {id:'gaps',label:'Gaps (comma-separated mm)',text:true},
   ]
 };
 
@@ -400,21 +401,15 @@ function buildParams(type) {
   const defaults = DEFAULTS[type] || {};
   let html = '';
   for (const d of defs) {
-    const val = defaults[d.id] !== undefined ? defaults[d.id] : d.min;
-    if (type === 'ide_variants' && d.id === 'w') {
-      html += `<div class="param-group"><label>${d.label} <span id="v_${d.id}">${val}</span></label>
-        <input type="number" id="p_${d.id}" value="${val}" min="${d.min}" max="${d.max}" step="${d.step}" onchange="preview()"></div>`;
-    } else if (type === 'ide_variants' && d.id === 'h') {
-      html += `<div class="param-group"><label>${d.label} <span id="v_${d.id}">${val}</span></label>
-        <input type="number" id="p_${d.id}" value="${val}" min="${d.min}" max="${d.max}" step="${d.step}" onchange="preview()"></div>`;
+    const val = defaults[d.id] !== undefined ? defaults[d.id] : (d.text ? '' : d.min);
+    if (d.text) {
+      // Text input (e.g. gaps comma-separated)
+      html += `<div class="param-group"><label>${d.label} <span style="color:var(--orange)">editable</span></label>
+        <input type="text" id="p_${d.id}" value="${val}" onchange="preview()"></div>`;
     } else {
       html += `<div class="param-group"><label>${d.label} <span id="v_${d.id}">${val}</span></label>
         <input type="range" id="p_${d.id}" value="${val}" min="${d.min}" max="${d.max}" step="${d.step}" oninput="document.getElementById('v_${d.id}').textContent=this.value;preview()"></div>`;
     }
-  }
-  if (type === 'ide_variants') {
-    html += `<div class="param-group"><label>Gaps (comma-separated mm) <span style="color:var(--orange)">fixed</span></label>
-      <input type="text" id="p_gaps" value="0.5,1.0,1.5,2.0,2.5" onchange="preview()"></div>`;
   }
   c.innerHTML = html;
 }
@@ -425,7 +420,7 @@ function getParams() {
   const defs = PARAM_DEFS[currentType] || [];
   for (const d of defs) {
     const el = document.getElementById('p_' + d.id);
-    p[d.id] = el ? (d.id === 'gaps' ? el.value : parseFloat(el.value)) : DEFAULTS[currentType][d.id];
+    p[d.id] = el ? (d.text ? el.value : parseFloat(el.value)) : DEFAULTS[currentType][d.id];
   }
   return p;
 }
