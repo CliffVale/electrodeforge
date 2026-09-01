@@ -166,7 +166,7 @@
         <a href="#features">Features</a>
         <a href="#types">Types</a>
         <a href="#cli">CLI</a>
-        <a href="/app" class="nav-cta">Open App →</a>
+        <a href="#app" class="nav-cta" onclick="alert('App coming soon! Deploying to Render...')">Open App →</a>
     </div>
 </nav>
 
@@ -174,7 +174,7 @@
     <h1>Design Electrodes<br><span>in Seconds</span></h1>
     <p>Parametric electrode generator for screen printing, laser cutting (LIG), and CNC. Describe your design — get fabrication-ready files.</p>
     <div class="hero-btns">
-        <a href="/app" class="btn-primary">⚡ Launch Generator</a>
+        <a href="#app" class="btn-primary" onclick="alert('App coming soon! Deploying to Render...')">⚡ Launch Generator</a>
         <a href="https://github.com/CliffVale/electrodeforge" class="btn-secondary">View on GitHub</a>
     </div>
 
@@ -226,6 +226,83 @@
             <div class="card-icon">💚</div>
             <h3>100% Free & Open</h3>
             <p>No accounts, no API keys, no cloud. Run locally on your machine. MIT licensed.</p>
+        </div>
+    </div>
+</section>
+
+<section class="features" id="guide" style="background:rgba(96,165,250,0.05);">
+    <h2>📋 Design <span>Guide</span></h2>
+    <p style="text-align:center;color:var(--muted);max-width:700px;margin:0 auto 2rem;font-size:0.95rem;">Scientifically validated design rules from peer-reviewed literature. Every default is based on published specifications.</p>
+    <div class="grid">
+        <div class="card" style="border-left:3px solid #60a5fa;">
+            <h3>⚡ Interdigitated (IDE)</h3>
+            <p style="font-size:0.85rem;line-height:1.7;">
+                <strong>Use:</strong> Amperometric/impedimetric biosensors, humidity sensors<br>
+                <strong>Key rule:</strong> Gap ≤ finger width for optimal redox cycling<br>
+                <strong>Typical:</strong> 10-50 pairs, 0.5-2mm fingers, 0.2-1mm gap<br>
+                <strong>Materials:</strong> Au, Pt, C on glass/PET/Kapton<br>
+                <em style="color:#94a3b8;">Ref: Kosri et al., Nanomaterials 2022, 12, 4171</em>
+            </p>
+        </div>
+        <div class="card" style="border-left:3px solid #34d399;">
+            <h3>◉ Three-Electrode System</h3>
+            <p style="font-size:0.85rem;line-height:1.7;">
+                <strong>Use:</strong> Cyclic voltammetry, EIS, battery testing<br>
+                <strong>Key rule:</strong> CE area ≥ 10× WE area (the "10:1 rule")<br>
+                <strong>Typical:</strong> WE=3mm, CE≥9.5mm, RE=2mm, spacing 2-5mm<br>
+                <strong>Materials:</strong> WE=GC/Pt/Au, CE=Pt, RE=Ag/AgCl<br>
+                <em style="color:#94a3b8;">Ref: Ossila Electrode Guide; Harris et al., J. Electrochem. Soc. 2023</em>
+            </p>
+        </div>
+        <div class="card" style="border-left:3px solid #fb923c;">
+            <h3>◎ Ring-Disk Electrode</h3>
+            <p style="font-size:0.85rem;line-height:1.7;">
+                <strong>Use:</strong> Generator-collector experiments, ORR studies<br>
+                <strong>Key rule:</strong> Gap controls collection efficiency (N≈0.256 standard)<br>
+                <strong>Typical:</strong> Disk=5mm, gap=0.375mm, ring=1-2mm wide<br>
+                <strong>Materials:</strong> GC disk, Pt ring (Pine Research standard)<br>
+                <em style="color:#94a3b8;">Ref: Pine Research RRDE Fundamentals; Frumkin & Nekrasov 1959</em>
+            </p>
+        </div>
+        <div class="card" style="border-left:3px solid #a78bfa;">
+            <h3>⌇ Serpentine / ∿ Meander</h3>
+            <p style="font-size:0.85rem;line-height:1.7;">
+                <strong>Use:</strong> Stretchable/wearable electronics, heaters<br>
+                <strong>Key rule:</strong> L/H ratio 1.5-3:1; amplitude ≤ seg_h/2<br>
+                <strong>Typical:</strong> 0.5-1mm trace, 2-5mm segments<br>
+                <strong>Materials:</strong> Ag/Cu ink on TPU/PDMS<br>
+                <em style="color:#94a3b8;">Ref: Suhaimi et al., Results in Physics 2022</em>
+            </p>
+        </div>
+        <div class="card" style="border-left:3px solid #f472b6;">
+            <h3>⊞ Electrode Array</h3>
+            <p style="font-size:0.85rem;line-height:1.7;">
+                <strong>Use:</strong> High-throughput screening, multiplexed sensing<br>
+                <strong>Key rule:</strong> Pitch ≥ 3× electrode diameter to avoid crosstalk<br>
+                <strong>Typical:</strong> 1-5mm electrodes, 6mm+ pitch<br>
+                <strong>Materials:</strong> Carbon, Au, Ag on PET/alumina<br>
+                <em style="color:#94a3b8;">Ref: Liu et al., Frontiers in Chemistry 2020</em>
+            </p>
+        </div>
+        <div class="card" style="border-left:3px solid #22d3ee;">
+            <h3>🌀 Spiral Electrode</h3>
+            <p style="font-size:0.85rem;line-height:1.7;">
+                <strong>Use:</strong> Impedance sensors, inductors, heating elements<br>
+                <strong>Key rule:</strong> Turn spacing ≥ trace width; 3-10 turns typical<br>
+                <strong>Typical:</strong> 0.3-1mm trace, 0.5-2mm spacing, 5-10 turns<br>
+                <strong>Materials:</strong> Au, Ag, C on glass/PET/Kapton<br>
+                <em style="color:#94a3b8;">Ref: MDPI Micromachines 2020, 11, 333</em>
+            </p>
+        </div>
+    </div>
+    <div style="margin-top:2rem;padding:1.5rem;background:var(--surface);border:1px solid var(--border);border-radius:12px;max-width:800px;margin-left:auto;margin-right:auto;">
+        <h3 style="margin-bottom:0.5rem;">🏭 Fabrication Minimum Feature Sizes</h3>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:0.8rem;font-size:0.85rem;">
+            <div><strong>Screen printing:</strong> 0.2mm min trace/gap</div>
+            <div><strong>Cricut vinyl:</strong> 0.5mm min trace/gap</div>
+            <div><strong>CO₂ laser:</strong> 0.2mm min feature</div>
+            <div><strong>LIG (Kapton):</strong> 0.5mm min (beam diameter)</div>
+            <div><strong>CNC milling:</strong> 0.3mm min trace</div>
         </div>
     </div>
 </section>
