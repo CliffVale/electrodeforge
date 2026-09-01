@@ -470,12 +470,14 @@ function genIDE(p) {
 
   // Derived: number of finger pairs that fit vertically
   var pitch = fingerW + gap;
-  var nPairs = Math.floor((subH - fingerW) / pitch) + 1;
+  // Each bus has nPairs fingers, interleaved total = 2*nPairs fingers
+  // Packed from bottom: B at y=0.25, A at y=1.25, B at y=2.25, ...
+  // Required height = (2*nPairs - 1) * pitch + fingerW <= subH
+  var nPairs = Math.floor((subH - fingerW) / (2 * pitch));
   if (nPairs < 1) nPairs = 1;
 
-  // Centre the finger array vertically
-  var totalFingersH = (2*nPairs - 1) * pitch + fingerW;
-  var yStart = (subH - totalFingersH) / 2;
+  // Pack fingers from bottom (matching reference layout)
+  var yStart = fingerW / 2;  // First B finger at y=0.25 (half finger width from bottom)
 
   // Horizontal positions
   var busLeftX = overlapW;            // Left bus bar right edge
