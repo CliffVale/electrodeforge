@@ -56,104 +56,385 @@ class BaseParams:
 
 @dataclass
 class IDEParams(BaseParams):
-    """Interdigitated electrode parameters."""
-    fingers: int = 10
-    finger_w_mm: float = 0.5
-    gap_mm: float = 0.3
-    finger_l_mm: float = 15.0
-    pad_size_mm: float = 3.0
-    bus_w_mm: float = 1.0
-    margin_mm: float = 2.0
+    """Interdigitated electrode (IDE) parameters.
+
+    Design rules (from literature):
+    - Finger width: 0.1-2mm (screen print), 1-100μm (photolithography)
+    - Gap: ≤ finger width for optimal redox cycling (NIH PMC9741053)
+    - Finger length: 5-20mm typical for screen-printed sensors
+    - Number of pairs: 10-50 for adequate signal; more = higher sensitivity
+    - Bus bar width: ≥ 2× finger width for low resistance
+    - Pad size: ≥ 2mm for reliable wire bonding / crocodile clip contact
+
+    References:
+    - Kosri et al., Nanomaterials 2022, 12, 4171 (PMC9741053)
+    - PotentioLab IDE Sensors Guide, 2026
+    """
+    fingers: int = 10          # 10-50 pairs typical
+    finger_w_mm: float = 1.0   # 0.5-2mm for screen printing; 25μm for micro
+    gap_mm: float = 1.0        # ≤ finger_w for redox cycling; 1mm safe for screen print
+    finger_l_mm: float = 10.0  # 5-20mm; shorter = faster response
+    pad_size_mm: float = 3.0   # ≥ 2mm for reliable contact
+    bus_w_mm: float = 2.0      # ≥ 2× finger_w for low resistance
+    margin_mm: float = 3.0     # Edge clearance from substrate
 
 
 @dataclass
 class ThreeElectrodeParams(BaseParams):
-    """Three-electrode system parameters."""
-    we_d_mm: float = 3.0
-    ce_d_mm: float = 4.0
-    re_d_mm: float = 2.0
-    spacing_mm: float = 5.0
-    pad_size_mm: float = 3.0
-    trace_w_mm: float = 0.5
+    """Three-electrode system parameters.
+
+    Design rules (from Ossila & electrochemistry literature):
+    - WE diameter: 1-6mm (3mm is most common for CV/EIS)
+    - CE area: MUST be ≥ 10× WE area (the "10:1 rule" — Ossila)
+    - RE diameter: 1-3mm (Ag/AgCl standard)
+    - WE-RE spacing: 2-5mm (closer = less iR drop, but avoid shielding)
+    - CE can be same size or larger than WE; ring shape maximises area
+    - Materials: WE = GC/Pt/Au, CE = Pt wire/coil, RE = Ag/AgCl
+
+    References:
+    - Ossila, "Choosing Working, Reference and Counter Electrodes"
+    - Harris et al., J. Electrochem. Soc. 2023 (PMC10141359)
+    """
+    we_d_mm: float = 3.0       # 1-6mm; 3mm is standard
+    ce_d_mm: float = 6.0       # ≥ 10× WE area; for disk CE: ≥ √10 × WE_d ≈ 9.5mm
+    re_d_mm: float = 2.0       # 1-3mm; Ag/AgCl typical
+    spacing_mm: float = 3.0    # 2-5mm WE-to-RE center distance
+    pad_size_mm: float = 3.0   # ≥ 2mm for contact
+    trace_w_mm: float = 0.5    # Trace to pad
     we_fill: str = "solid"
 
 
 @dataclass
 class SerpentineParams(BaseParams):
-    """Serpentine / zigzag electrode parameters."""
-    trace_w_mm: float = 0.5
-    segments: int = 10
-    seg_l_mm: float = 2.0
-    seg_h_mm: float = 1.5
-    pad_size_mm: float = 3.0
-    margin_mm: float = 2.0
+    """Serpentine / zigzag electrode parameters.
+
+    Design rules (from stretchable electronics literature):
+    - Trace width: 0.5-1mm (screen print); 50-100μm (lithography)
+    - Segment aspect ratio (L/H): 1.5-3:1 for good stretchability
+    - Segment height: 0.5-3mm; affects bend radius
+    - More segments = more stretchability but higher resistance
+    - For screen printing: min trace 0.5mm, min gap 0.5mm
+
+    References:
+    - Suhaimi et al., Results in Physics 2022 (screen printed Ag serpentine)
+    - ACS Applied Materials 2025 (printable stretchable serpentine)
+    """
+    trace_w_mm: float = 1.0    # 0.5-1mm for screen printing
+    segments: int = 8          # 6-15 typical
+    seg_l_mm: float = 3.0      # 2-5mm; L/H ratio 1.5-3:1
+    seg_h_mm: float = 2.0      # 1-3mm
+    pad_size_mm: float = 3.0   # ≥ 2mm
+    margin_mm: float = 3.0
 
 
 @dataclass
 class RingDiskParams(BaseParams):
-    """Ring-disk electrode parameters."""
-    disk_d_mm: float = 3.0
-    gap_mm: float = 0.2
-    ring_w_mm: float = 0.5
-    pad_size_mm: float = 3.0
+    """Ring-disk electrode parameters.
+
+    Design rules (from RRDE literature):
+    - Disk diameter: 3-6mm (5mm standard for Pine Research RRDE)
+    - Gap: 375μm (0.375mm) is the industry standard for RRDE
+    - Ring width: 1-2mm (must be wide enough for measurable collection)
+    - Collection efficiency N depends on geometry (N≈0.256 for standard)
+    - Smaller gap = higher collection efficiency but harder to fabricate
+    - For screen printing: gap ≥ 0.3mm is practical minimum
+
+    References:
+    - Pine Research, "Rotating Ring Disk Electrode Fundamentals"
+    - Frumkin & Nekrasov, 1959 (original RRDE theory)
+    - BioLogic, "RRDE Introduction"
+    """
+    disk_d_mm: float = 5.0     # 3-6mm; 5mm is Pine Research standard
+    gap_mm: float = 0.5        # 0.375mm standard; ≥0.3mm for screen print
+    ring_w_mm: float = 1.5     # 1-2mm; wide enough for signal collection
+    pad_size_mm: float = 3.0   # ≥ 2mm
     trace_w_mm: float = 0.5
 
 
 @dataclass
 class ArrayParams(BaseParams):
-    """Uniform electrode array parameters."""
-    rows: int = 4
-    cols: int = 4
-    electrode_d_mm: float = 2.0
-    pitch_x_mm: float = 5.0
-    pitch_y_mm: float = 5.0
-    trace_w_mm: float = 0.3
-    pad_size_mm: float = 2.0
+    """Uniform electrode array parameters.
+
+    Design rules (from array literature):
+    - Electrode diameter: 1-5mm (2mm common for screen print)
+    - Pitch: ≥ 3× electrode diameter to minimise crosstalk
+    - Minimum inter-electrode gap: ≥ 1mm for screen printing
+    - Bus bar connects all electrodes; width ≥ 1.5mm
+    - Pad size: ≥ 2mm for external contact
+    - More electrodes = higher throughput but more complex wiring
+
+    References:
+    - Liu et al., Frontiers in Chemistry 2020 (Micro/Nano Electrode Array Sensors)
+    - Zimmer Peacock, "Designing Screen Printed Electrodes"
+    """
+    rows: int = 4              # 2-10 typical
+    cols: int = 4              # 2-10 typical
+    electrode_d_mm: float = 2.0  # 1-5mm
+    pitch_x_mm: float = 6.0    # ≥ 3× diameter = 6mm for 2mm electrodes
+    pitch_y_mm: float = 6.0    # ≥ 3× diameter
+    trace_w_mm: float = 0.5    # 0.3-1mm
+    pad_size_mm: float = 3.0   # ≥ 2mm
 
 
 @dataclass
 class MeanderParams(BaseParams):
-    """Spring-like serpentine (each segment has sinusoidal meander waves)."""
-    trace_w_mm: float = 0.5
-    segments: int = 6          # Number of horizontal segments
-    seg_l_mm: float = 3.0      # Length of each segment
-    seg_h_mm: float = 2.0      # Vertical step between segments
-    meander_n: int = 8         # Number of sine half-cycles per segment
-    meander_amp_mm: float = 0.8  # Amplitude of the meander wave
-    pad_size_mm: float = 3.0
-    margin_mm: float = 2.0
+    """Spring-like serpentine (sinusoidal meander on each segment).
+
+    Design rules (from wearable electronics literature):
+    - Trace width: 0.5-1mm for screen printing
+    - Meander amplitude: ≤ segment_height / 2 (avoids overlap)
+    - Waves per segment: 4-12; more waves = more stretchability
+    - Segment L/H ratio: 1.5-3:1 (same as plain serpentine)
+    - Total meander height = seg_h + 2× amplitude must fit in substrate
+
+    References:
+    - Suhaimi et al., Results in Physics 2022
+    - ACS Applied Materials 2025 (stretchable serpentine)
+    """
+    trace_w_mm: float = 1.0    # 0.5-1mm for screen printing
+    segments: int = 6          # 4-10 typical
+    seg_l_mm: float = 4.0      # 3-6mm; L/H ratio 1.5-3:1
+    seg_h_mm: float = 2.5      # 1.5-3mm; amplitude must be ≤ seg_h/2
+    meander_n: int = 6         # 4-12 waves per segment
+    meander_amp_mm: float = 1.0  # ≤ seg_h/2 = 1.25mm max
+    pad_size_mm: float = 3.0   # ≥ 2mm
+    margin_mm: float = 3.0
 
 
 @dataclass
 class CircularArrayParams(BaseParams):
-    """Circular/radial electrode array parameters."""
-    rings: int = 3             # Number of concentric rings
-    electrodes_per_ring: int = 8  # Electrodes in outermost ring
-    electrode_d_mm: float = 1.5  # Electrode diameter
-    ring_spacing_mm: float = 4.0  # Spacing between rings
-    pad_size_mm: float = 3.0
-    trace_w_mm: float = 0.3
+    """Circular/radial electrode array parameters.
+
+    Design rules:
+    - Ring spacing: ≥ electrode diameter to avoid field overlap
+    - Electrodes per ring: 6-12 (outer rings can have more)
+    - Electrode diameter: 1-3mm for screen printing
+    - Centre electrode connects radially to all ring electrodes
+    - Pad at edge for external connection
+
+    References:
+    - MDPI Sensors 2026, 26, 541 (spiral/embracing IDE)
+    """
+    rings: int = 3             # 2-5 typical
+    electrodes_per_ring: int = 8  # 6-12; outer ring
+    electrode_d_mm: float = 2.0  # 1-3mm
+    ring_spacing_mm: float = 5.0  # ≥ electrode_d
+    pad_size_mm: float = 3.0   # ≥ 2mm
+    trace_w_mm: float = 0.5    # 0.3-1mm
 
 
 @dataclass
 class SpiralParams(BaseParams):
-    """Archimedean spiral electrode parameters."""
-    turns: int = 5             # Number of full turns
-    r_start_mm: float = 0.5    # Starting radius (inner)
-    r_end_mm: float = 10.0     # Ending radius (outer)
-    trace_w_mm: float = 0.5    # Trace width
-    n_points: int = 200        # Resolution (points per turn)
-    pad_size_mm: float = 3.0
+    """Archimedean spiral electrode parameters.
+
+    Design rules (from impedance spectroscopy literature):
+    - Turn spacing: ≥ trace width (no overlap); 0.5-2mm typical
+    - Trace width: 0.3-1mm for screen printing
+    - Number of turns: 3-10; more turns = higher inductance/capacitance
+    - Outer radius: should fill ~80% of substrate for max sensitivity
+    - Inner radius: ≥ 0.5mm (minimum for screen printing)
+    - Uniform turn spacing for consistent impedance response
+
+    References:
+    - MDPI Micromachines 2020, 11, 333 (spiral electrode biosensor)
+    - Nature Scientific Reports 2024 (spiral-interdigital electrode)
+    - Springer 2021 (Archimedean spiral IDE, 50-150μm gaps)
+    """
+    turns: int = 5             # 3-10 typical
+    r_start_mm: float = 1.0    # ≥ 0.5mm; inner clearance
+    r_end_mm: float = 10.0     # ~80% of substrate width/2
+    trace_w_mm: float = 0.8    # 0.3-1mm; spacing must be ≥ trace_w
+    n_points: int = 200        # Resolution
+    pad_size_mm: float = 3.0   # ≥ 2mm
 
 
 @dataclass
 class PolygonParams(BaseParams):
-    """Custom polygon electrode parameters."""
-    vertices: str = "5,0;10,8.66;0,8.66"  # Comma-separated x,y pairs
-    trace_w_mm: float = 0.5
-    pad_size_mm: float = 3.0
+    """Custom polygon electrode parameters.
+
+    Design rules:
+    - Vertices define the electrode outline (minimum 3 for closed polygon)
+    - Coordinates are in mm; auto-scaled to fit substrate
+    - Trace width: 0.3-1mm for screen printing
+    - Pad connects to nearest vertex for external contact
+    - Common shapes: triangle, hexagon, diamond, custom
+    """
+    vertices: str = "5,0;10,8.66;0,8.66"  # Equilateral triangle (mm)
+    trace_w_mm: float = 0.8    # 0.3-1mm
+    pad_size_mm: float = 3.0   # ≥ 2mm
     pad_x_mm: float = -1.0    # Pad X position (-1 = auto left)
     pad_y_mm: float = -1.0    # Pad Y position (-1 = auto centre)
+
+
+# ─────────────────────────────────────────────────────────────────────
+# Fabrication constraints & design validation
+# ─────────────────────────────────────────────────────────────────────
+
+# Minimum feature sizes by fabrication method (mm)
+FAB_CONSTRAINTS = {
+    "screen_print": {"min_trace": 0.2, "min_gap": 0.2, "min_pad": 1.5},
+    "cricut_vinyl": {"min_trace": 0.5, "min_gap": 0.5, "min_pad": 2.0},
+    "laser_co2":    {"min_trace": 0.2, "min_gap": 0.2, "min_pad": 1.0},
+    "laser_lig":    {"min_trace": 0.5, "min_gap": 0.5, "min_pad": 2.0},  # beam diameter limit
+    "cnc_mill":     {"min_trace": 0.3, "min_gap": 0.3, "min_pad": 1.0},
+}
+
+
+def validate_design(params, fab_method="screen_print"):
+    """Validate electrode design against fabrication constraints.
+
+    Returns list of warnings (empty = all good).
+    """
+    warnings = []
+    fc = FAB_CONSTRAINTS.get(fab_method, FAB_CONSTRAINTS["screen_print"])
+
+    # Common checks
+    if hasattr(params, "trace_w_mm") and params.trace_w_mm < fc["min_trace"]:
+        warnings.append(
+            f"Trace width {params.trace_w_mm}mm < {fc['min_trace']}mm "
+            f"minimum for {fab_method}"
+        )
+    if hasattr(params, "pad_size_mm") and params.pad_size_mm < fc["min_pad"]:
+        warnings.append(
+            f"Pad size {params.pad_size_mm}mm < {fc['min_pad']}mm "
+            f"minimum for reliable contact"
+        )
+
+    # IDE-specific checks
+    if isinstance(params, IDEParams):
+        if params.gap_mm > params.finger_w_mm:
+            warnings.append(
+                f"Gap ({params.gap_mm}mm) > finger width ({params.finger_w_mm}mm). "
+                f"For optimal redox cycling, gap should be ≤ finger width."
+            )
+        if params.gap_mm < fc["min_gap"]:
+            warnings.append(
+                f"Gap {params.gap_mm}mm < {fc['min_gap']}mm minimum for {fab_method}"
+            )
+        if params.bus_w_mm < 2 * params.finger_w_mm:
+            warnings.append(
+                f"Bus bar ({params.bus_w_mm}mm) should be ≥ 2× finger width "
+                f"({2*params.finger_w_mm}mm) for low resistance"
+            )
+
+    # Three-electrode: CE must be ≥ 10× WE area
+    if isinstance(params, ThreeElectrodeParams):
+        we_area = math.pi * (params.we_d_mm / 2) ** 2
+        ce_area = math.pi * (params.ce_d_mm / 2) ** 2
+        if ce_area < 10 * we_area:
+            min_ce_d = params.we_d_mm * math.sqrt(10)
+            warnings.append(
+                f"CE area ({ce_area:.1f}mm²) < 10× WE area ({we_area:.1f}mm²). "
+                f"The 10:1 rule requires CE diameter ≥ {min_ce_d:.1f}mm."
+            )
+
+    # Ring-disk: gap and ring width checks
+    if isinstance(params, RingDiskParams):
+        if params.gap_mm < 0.3:
+            warnings.append(
+                f"Gap {params.gap_mm}mm is very tight. Standard RRDE gap is 0.375mm. "
+                f"Difficult to fabricate with screen printing."
+            )
+
+    # Array: pitch must be ≥ 3× diameter to avoid crosstalk
+    if isinstance(params, ArrayParams):
+        min_pitch = 3 * params.electrode_d_mm
+        if params.pitch_x_mm < min_pitch or params.pitch_y_mm < min_pitch:
+            warnings.append(
+                f"Pitch ({params.pitch_x_mm}×{params.pitch_y_mm}mm) < 3× electrode "
+                f"diameter ({min_pitch}mm). May cause electrochemical crosstalk."
+            )
+
+    # Serpentine/Meander: amplitude vs segment height
+    if isinstance(params, (SerpentineParams, MeanderParams)):
+        if hasattr(params, "meander_amp_mm") and hasattr(params, "seg_h_mm"):
+            if params.meander_amp_mm > params.seg_h_mm / 2:
+                warnings.append(
+                    f"Meander amplitude ({params.meander_amp_mm}mm) > seg_h/2 "
+                    f"({params.seg_h_mm/2}mm). Waves will overlap!"
+                )
+
+    # Spiral: trace width vs spacing
+    if isinstance(params, SpiralParams):
+        spacing = (params.r_end_mm - params.r_start_mm) / params.turns if params.turns > 0 else 0
+        if params.trace_w_mm > spacing and spacing > 0:
+            warnings.append(
+                f"Trace width ({params.trace_w_mm}mm) > turn spacing "
+                f"({spacing:.2f}mm). Spiral turns will overlap!"
+            )
+
+    return warnings
+
+
+def print_design_info(elec_type, params):
+    """Print helpful design information for the electrode type."""
+    info = {
+        "ide": (
+            "Interdigitated Electrode (IDE)\n"
+            "  Use: Amperometric/impedimetric biosensors, humidity sensors\n"
+            "  Principle: Two interlocking combs; analyte changes impedance between fingers\n"
+            "  Key rule: Gap ≤ finger width for optimal redox cycling\n"
+            "  Typical materials: Au, Pt, C on glass/PET/Kapton"
+        ),
+        "three": (
+            "Three-Electrode System\n"
+            "  Use: Cyclic voltammetry, impedance spectroscopy, battery testing\n"
+            "  WE: Where reaction happens | CE: Completes circuit | RE: Stable potential\n"
+            "  Key rule: CE area ≥ 10× WE area (prevents CE from limiting current)\n"
+            "  Typical materials: WE=GC/Pt/Au, CE=Pt, RE=Ag/AgCl"
+        ),
+        "serpentine": (
+            "Serpentine Electrode\n"
+            "  Use: Stretchable/wearable electronics, resistive heaters\n"
+            "  Principle: Zigzag trace accommodates mechanical strain\n"
+            "  Key rule: L/H ratio 1.5-3:1 for optimal stretchability\n"
+            "  Typical materials: Ag ink, Cu on TPU/PDMS"
+        ),
+        "ringdisk": (
+            "Ring-Disk Electrode\n"
+            "  Use: Generator-collector experiments, ORR studies\n"
+            "  Principle: Disk generates product; ring collects it\n"
+            "  Key rule: Gap controls collection efficiency (N≈0.256 standard)\n"
+            "  Typical materials: GC disk, Pt ring"
+        ),
+        "array": (
+            "Electrode Array\n"
+            "  Use: High-throughput screening, multiplexed sensing\n"
+            "  Principle: Multiple electrodes share a common bus bar\n"
+            "  Key rule: Pitch ≥ 3× electrode diameter to avoid crosstalk\n"
+            "  Typical materials: Carbon, Au, Ag on PET/alumina"
+        ),
+        "meander": (
+            "Meander (Spring Serpentine) Electrode\n"
+            "  Use: Wearable sensors, stretchable interconnects\n"
+            "  Principle: Sinusoidal waves on each segment add stretchability\n"
+            "  Key rule: Amplitude ≤ seg_h/2 to prevent overlap\n"
+            "  Typical materials: Ag/Cu ink on TPU/PDMS"
+        ),
+        "carray": (
+            "Circular/Radial Array\n"
+            "  Use: Radial electrochemistry, multi-analyte detection\n"
+            "  Principle: Concentric rings with radial traces to centre pad\n"
+            "  Key rule: Ring spacing ≥ electrode diameter\n"
+            "  Typical materials: Au, C on glass/PET"
+        ),
+        "spiral": (
+            "Spiral Electrode\n"
+            "  Use: Impedance sensors, inductors, heating elements\n"
+            "  Principle: Archimedean spiral; uniform turn spacing\n"
+            "  Key rule: Turn spacing ≥ trace width; 3-10 turns typical\n"
+            "  Typical materials: Au, Ag, C on glass/PET/Kapton"
+        ),
+        "polygon": (
+            "Custom Polygon Electrode\n"
+            "  Use: Any custom geometry (hexagons, diamonds, etc.)\n"
+            "  Principle: Define vertices; auto-scale to fit substrate\n"
+            "  Key rule: Minimum 3 vertices for closed shape\n"
+            "  Typical materials: Any conductive material on any substrate"
+        ),
+    }
+    if elec_type in info:
+        print(f"\n  📋 {info[elec_type]}")
 
 
 # ─────────────────────────────────────────────────────────────────────
@@ -1416,16 +1697,23 @@ Examples:
                    help="Export per-layer files. Optionally specify layers: --layers ELECTRODE_A PAD")
     p.add_argument("--list-layers", action="store_true",
                    help="List available layers for the electrode type and exit")
+    p.add_argument("--validate", action="store_true",
+                   help="Validate design against fabrication constraints and print warnings")
+    p.add_argument("--info", action="store_true",
+                   help="Print design guidelines for the electrode type and exit")
+    p.add_argument("--fab", default="screen_print",
+                   choices=["screen_print", "cricut_vinyl", "laser_co2", "laser_lig", "cnc_mill"],
+                   help="Fabrication method for validation (default: screen_print)")
 
     # IDE
     ide = p.add_argument_group("Interdigitated (IDE) parameters")
     ide.add_argument("--fingers", type=int, default=10)
-    ide.add_argument("--finger-w", type=float, default=0.5)
-    ide.add_argument("--gap", type=float, default=0.3)
-    ide.add_argument("--finger-l", type=float, default=15.0)
+    ide.add_argument("--finger-w", type=float, default=1.0)
+    ide.add_argument("--gap", type=float, default=1.0)
+    ide.add_argument("--finger-l", type=float, default=10.0)
     ide.add_argument("--pad-size", type=float, default=3.0)
-    ide.add_argument("--bus-w", type=float, default=1.0)
-    ide.add_argument("--margin", type=float, default=2.0)
+    ide.add_argument("--bus-w", type=float, default=2.0)
+    ide.add_argument("--margin", type=float, default=3.0)
 
     # Three
     three = p.add_argument_group("Three-electrode parameters")
@@ -1572,6 +1860,23 @@ def main():
                           vertices=args.vertices, trace_w_mm=args.trace_w,
                           pad_size_mm=args.pad_size,
                           pad_x_mm=args.pad_x, pad_y_mm=args.pad_y)
+
+    # Handle --info: print design guidelines and exit
+    if args.info:
+        print_design_info(args.type, p)
+        return
+
+    # Handle --validate: check design and print warnings
+    if args.validate:
+        warnings = validate_design(p, args.fab)
+        if warnings:
+            print(f"\n⚠️  Design warnings ({args.fab}):")
+            for w in warnings:
+                print(f"  ⚠  {w}")
+        else:
+            print(f"\n✅ Design OK for {args.fab} — no warnings")
+        print_design_info(args.type, p)
+        return
 
     # Multi-layer export: run with LayerCollector, export per-layer files
     if args.layers is not None:

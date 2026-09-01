@@ -35,104 +35,113 @@ os.makedirs(OUTPUT_DIR, exist_ok=True)
 TYPE_SCHEMA = {
     "ide": {
         "label": "Interdigitated Electrode (IDE)",
-        "description": "Comb-finger array for electrochemical sensors. Two interlocking combs with alternating fingers.",
+        "description": "Comb-finger array for electrochemical sensors. Two interlocking combs with alternating fingers. Gap ≤ finger width for optimal redox cycling (Kosri et al., Nanomaterials 2022).",
+        "tip": "For biosensors: keep gap ≤ finger width. More finger pairs = higher sensitivity.",
         "params": [
             {"name": "fingers", "label": "Finger Pairs", "type": "int", "default": 10, "min": 2, "max": 100, "step": 1},
-            {"name": "finger_w", "label": "Finger Width (mm)", "type": "float", "default": 0.5, "min": 0.1, "max": 5, "step": 0.1},
-            {"name": "gap", "label": "Gap Between Fingers (mm)", "type": "float", "default": 0.3, "min": 0.1, "max": 5, "step": 0.1},
-            {"name": "finger_l", "label": "Finger Length (mm)", "type": "float", "default": 15.0, "min": 1, "max": 50, "step": 0.5},
-            {"name": "pad_size", "label": "Pad Size (mm)", "type": "float", "default": 3.0, "min": 1, "max": 10, "step": 0.5},
-            {"name": "bus_w", "label": "Bus Bar Width (mm)", "type": "float", "default": 1.0, "min": 0.5, "max": 5, "step": 0.1},
-            {"name": "margin", "label": "Margin (mm)", "type": "float", "default": 2.0, "min": 0.5, "max": 10, "step": 0.5},
+            {"name": "finger_w", "label": "Finger Width (mm)", "type": "float", "default": 1.0, "min": 0.2, "max": 5, "step": 0.1},
+            {"name": "gap", "label": "Gap (mm) — keep ≤ finger width", "type": "float", "default": 1.0, "min": 0.2, "max": 5, "step": 0.1},
+            {"name": "finger_l", "label": "Finger Length (mm)", "type": "float", "default": 10.0, "min": 1, "max": 50, "step": 0.5},
+            {"name": "pad_size", "label": "Pad Size (mm) — ≥2mm for contact", "type": "float", "default": 3.0, "min": 1.5, "max": 10, "step": 0.5},
+            {"name": "bus_w", "label": "Bus Bar Width (mm) — ≥2× finger width", "type": "float", "default": 2.0, "min": 0.5, "max": 5, "step": 0.1},
+            {"name": "margin", "label": "Margin (mm)", "type": "float", "default": 3.0, "min": 0.5, "max": 10, "step": 0.5},
         ]
     },
     "three": {
         "label": "Three-Electrode System",
-        "description": "WE (centre disk), CE (ring), RE (adjacent disk) — standard for voltammetry.",
+        "description": "WE (centre disk), CE (ring), RE (adjacent disk). Standard for CV/EIS. CE area MUST be ≥10× WE area (the '10:1 rule' — Ossila).",
+        "tip": "CE must be much larger than WE. If CE is too small, it limits current and distorts measurements.",
         "params": [
-            {"name": "we_d", "label": "WE Diameter (mm)", "type": "float", "default": 3.0, "min": 0.5, "max": 15, "step": 0.5},
-            {"name": "ce_d", "label": "CE Diameter (mm)", "type": "float", "default": 4.0, "min": 0.5, "max": 15, "step": 0.5},
-            {"name": "re_d", "label": "RE Diameter (mm)", "type": "float", "default": 2.0, "min": 0.5, "max": 15, "step": 0.5},
-            {"name": "spacing", "label": "Centre Spacing (mm)", "type": "float", "default": 5.0, "min": 2, "max": 20, "step": 0.5},
-            {"name": "pad_size", "label": "Pad Size (mm)", "type": "float", "default": 3.0, "min": 1, "max": 10, "step": 0.5},
+            {"name": "we_d", "label": "WE Diameter (mm) — 3mm is standard", "type": "float", "default": 3.0, "min": 0.5, "max": 15, "step": 0.5},
+            {"name": "ce_d", "label": "CE Diameter (mm) — must be ≥10× WE area", "type": "float", "default": 6.0, "min": 0.5, "max": 20, "step": 0.5},
+            {"name": "re_d", "label": "RE Diameter (mm) — Ag/AgCl typical", "type": "float", "default": 2.0, "min": 0.5, "max": 10, "step": 0.5},
+            {"name": "spacing", "label": "WE-RE Spacing (mm) — closer = less iR drop", "type": "float", "default": 3.0, "min": 1, "max": 15, "step": 0.5},
+            {"name": "pad_size", "label": "Pad Size (mm)", "type": "float", "default": 3.0, "min": 1.5, "max": 10, "step": 0.5},
         ]
     },
     "serpentine": {
         "label": "Serpentine Trace",
-        "description": "Zigzag trace for stretchable electronics and resistive heating.",
+        "description": "Zigzag trace for stretchable/wearable electronics. L/H ratio 1.5-3:1 for optimal stretchability.",
+        "tip": "Higher aspect ratio (L/H) = more stretchability. Min trace 0.5mm for screen printing.",
         "params": [
-            {"name": "trace_w", "label": "Trace Width (mm)", "type": "float", "default": 0.5, "min": 0.1, "max": 3, "step": 0.1},
-            {"name": "segments", "label": "Segments", "type": "int", "default": 10, "min": 2, "max": 50, "step": 1},
-            {"name": "seg_l", "label": "Segment Length (mm)", "type": "float", "default": 2.0, "min": 0.5, "max": 10, "step": 0.5},
-            {"name": "seg_h", "label": "Segment Height (mm)", "type": "float", "default": 1.5, "min": 0.5, "max": 5, "step": 0.1},
-            {"name": "pad_size", "label": "Pad Size (mm)", "type": "float", "default": 3.0, "min": 1, "max": 10, "step": 0.5},
+            {"name": "trace_w", "label": "Trace Width (mm) — min 0.5mm for screen print", "type": "float", "default": 1.0, "min": 0.3, "max": 3, "step": 0.1},
+            {"name": "segments", "label": "Segments", "type": "int", "default": 8, "min": 2, "max": 50, "step": 1},
+            {"name": "seg_l", "label": "Segment Length (mm) — L/H ratio 1.5-3:1", "type": "float", "default": 3.0, "min": 0.5, "max": 10, "step": 0.5},
+            {"name": "seg_h", "label": "Segment Height (mm)", "type": "float", "default": 2.0, "min": 0.5, "max": 5, "step": 0.1},
+            {"name": "pad_size", "label": "Pad Size (mm)", "type": "float", "default": 3.0, "min": 1.5, "max": 10, "step": 0.5},
         ]
     },
     "ringdisk": {
         "label": "Ring-Disk Electrode",
-        "description": "Concentric disk and ring for collection-mode experiments.",
+        "description": "Concentric disk + ring for generator-collector experiments. Standard gap is 0.375mm (Pine Research).",
+        "tip": "Smaller gap = higher collection efficiency but harder to fabricate. 0.5mm is practical for screen printing.",
         "params": [
-            {"name": "disk_d", "label": "Disk Diameter (mm)", "type": "float", "default": 3.0, "min": 0.5, "max": 15, "step": 0.5},
-            {"name": "gap", "label": "Gap (mm)", "type": "float", "default": 0.2, "min": 0.05, "max": 2, "step": 0.05},
-            {"name": "ring_w", "label": "Ring Width (mm)", "type": "float", "default": 0.5, "min": 0.1, "max": 3, "step": 0.1},
-            {"name": "pad_size", "label": "Pad Size (mm)", "type": "float", "default": 3.0, "min": 1, "max": 10, "step": 0.5},
+            {"name": "disk_d", "label": "Disk Diameter (mm) — 5mm is Pine standard", "type": "float", "default": 5.0, "min": 1, "max": 15, "step": 0.5},
+            {"name": "gap", "label": "Gap (mm) — 0.375mm standard; ≥0.3mm for print", "type": "float", "default": 0.5, "min": 0.1, "max": 2, "step": 0.05},
+            {"name": "ring_w", "label": "Ring Width (mm) — 1-2mm typical", "type": "float", "default": 1.5, "min": 0.5, "max": 5, "step": 0.1},
+            {"name": "pad_size", "label": "Pad Size (mm)", "type": "float", "default": 3.0, "min": 1.5, "max": 10, "step": 0.5},
         ]
     },
     "array": {
         "label": "Electrode Array (Grid)",
-        "description": "Uniform grid of circular electrodes with common bus bar.",
+        "description": "Uniform grid of circular electrodes. Pitch ≥3× electrode diameter to avoid crosstalk.",
+        "tip": "If electrodes are too close, their diffusion layers overlap and cause signal interference.",
         "params": [
             {"name": "rows", "label": "Rows", "type": "int", "default": 4, "min": 1, "max": 20, "step": 1},
             {"name": "cols", "label": "Columns", "type": "int", "default": 4, "min": 1, "max": 20, "step": 1},
-            {"name": "electrode_d", "label": "Electrode Diameter (mm)", "type": "float", "default": 2.0, "min": 0.5, "max": 10, "step": 0.5},
-            {"name": "pitch_x", "label": "Horizontal Pitch (mm)", "type": "float", "default": 5.0, "min": 1, "max": 20, "step": 0.5},
-            {"name": "pitch_y", "label": "Vertical Pitch (mm)", "type": "float", "default": 5.0, "min": 1, "max": 20, "step": 0.5},
-            {"name": "pad_size", "label": "Pad Size (mm)", "type": "float", "default": 2.0, "min": 0.5, "max": 10, "step": 0.5},
+            {"name": "electrode_d", "label": "Electrode Diameter (mm) — 2mm typical", "type": "float", "default": 2.0, "min": 0.5, "max": 10, "step": 0.5},
+            {"name": "pitch_x", "label": "Horizontal Pitch (mm) — ≥3× diameter", "type": "float", "default": 6.0, "min": 1, "max": 20, "step": 0.5},
+            {"name": "pitch_y", "label": "Vertical Pitch (mm) — ≥3× diameter", "type": "float", "default": 6.0, "min": 1, "max": 20, "step": 0.5},
+            {"name": "pad_size", "label": "Pad Size (mm)", "type": "float", "default": 3.0, "min": 1.5, "max": 10, "step": 0.5},
         ]
     },
     "meander": {
         "label": "Meander (Spring Serpentine)",
-        "description": "Each segment has sinusoidal waves — stretches more than plain serpentine.",
+        "description": "Sinusoidal waves on each segment — more stretchable than plain serpentine. Amplitude ≤ seg_h/2.",
+        "tip": "More waves = more stretchability. Amplitude must not exceed half the segment height.",
         "params": [
-            {"name": "trace_w", "label": "Trace Width (mm)", "type": "float", "default": 0.5, "min": 0.1, "max": 3, "step": 0.1},
+            {"name": "trace_w", "label": "Trace Width (mm) — min 0.5mm for print", "type": "float", "default": 1.0, "min": 0.3, "max": 3, "step": 0.1},
             {"name": "segments", "label": "Segments", "type": "int", "default": 6, "min": 2, "max": 30, "step": 1},
-            {"name": "seg_l", "label": "Segment Length (mm)", "type": "float", "default": 3.0, "min": 0.5, "max": 10, "step": 0.5},
-            {"name": "seg_h", "label": "Segment Height (mm)", "type": "float", "default": 2.0, "min": 0.5, "max": 5, "step": 0.1},
-            {"name": "meander_n", "label": "Waves Per Segment", "type": "int", "default": 8, "min": 1, "max": 30, "step": 1},
-            {"name": "meander_amp", "label": "Wave Amplitude (mm)", "type": "float", "default": 0.8, "min": 0.1, "max": 3, "step": 0.1},
-            {"name": "pad_size", "label": "Pad Size (mm)", "type": "float", "default": 3.0, "min": 1, "max": 10, "step": 0.5},
+            {"name": "seg_l", "label": "Segment Length (mm)", "type": "float", "default": 4.0, "min": 1, "max": 10, "step": 0.5},
+            {"name": "seg_h", "label": "Segment Height (mm)", "type": "float", "default": 2.5, "min": 1, "max": 5, "step": 0.1},
+            {"name": "meander_n", "label": "Waves Per Segment", "type": "int", "default": 6, "min": 1, "max": 20, "step": 1},
+            {"name": "meander_amp", "label": "Wave Amplitude (mm) — ≤ seg_h/2", "type": "float", "default": 1.0, "min": 0.1, "max": 3, "step": 0.1},
+            {"name": "pad_size", "label": "Pad Size (mm)", "type": "float", "default": 3.0, "min": 1.5, "max": 10, "step": 0.5},
         ]
     },
     "carray": {
         "label": "Circular Array",
-        "description": "Electrodes in concentric rings with radial traces to centre pad.",
+        "description": "Concentric rings of electrodes with radial traces. Ring spacing ≥ electrode diameter.",
+        "tip": "Inner rings have fewer electrodes to maintain uniform field distribution.",
         "params": [
             {"name": "rings", "label": "Rings", "type": "int", "default": 3, "min": 1, "max": 10, "step": 1},
             {"name": "epr", "label": "Electrodes Per Ring (outer)", "type": "int", "default": 8, "min": 4, "max": 36, "step": 1},
-            {"name": "electrode_d", "label": "Electrode Diameter (mm)", "type": "float", "default": 1.5, "min": 0.5, "max": 5, "step": 0.1},
-            {"name": "ring_spacing", "label": "Ring Spacing (mm)", "type": "float", "default": 4.0, "min": 1, "max": 10, "step": 0.5},
-            {"name": "pad_size", "label": "Pad Size (mm)", "type": "float", "default": 3.0, "min": 1, "max": 10, "step": 0.5},
+            {"name": "electrode_d", "label": "Electrode Diameter (mm) — 1-3mm typical", "type": "float", "default": 2.0, "min": 0.5, "max": 5, "step": 0.1},
+            {"name": "ring_spacing", "label": "Ring Spacing (mm) — ≥ electrode diameter", "type": "float", "default": 5.0, "min": 1, "max": 10, "step": 0.5},
+            {"name": "pad_size", "label": "Pad Size (mm)", "type": "float", "default": 3.0, "min": 1.5, "max": 10, "step": 0.5},
         ]
     },
     "spiral": {
         "label": "Spiral Electrode",
-        "description": "Archimedean spiral — r = a + b*theta. Common in impedance sensors.",
+        "description": "Archimedean spiral (r = a + b·θ). Used in impedance sensors and inductors. Uniform turn spacing.",
+        "tip": "Turn spacing must be ≥ trace width. More turns = higher inductance/capacitance.",
         "params": [
-            {"name": "turns", "label": "Turns", "type": "int", "default": 5, "min": 1, "max": 20, "step": 1},
-            {"name": "r_start", "label": "Start Radius (mm)", "type": "float", "default": 0.5, "min": 0.1, "max": 5, "step": 0.1},
-            {"name": "r_end", "label": "End Radius (mm)", "type": "float", "default": 10.0, "min": 2, "max": 20, "step": 0.5},
-            {"name": "trace_w", "label": "Trace Width (mm)", "type": "float", "default": 0.5, "min": 0.1, "max": 3, "step": 0.1},
+            {"name": "turns", "label": "Turns — 3-10 typical", "type": "int", "default": 5, "min": 1, "max": 20, "step": 1},
+            {"name": "r_start", "label": "Start Radius (mm) — ≥0.5mm", "type": "float", "default": 1.0, "min": 0.5, "max": 5, "step": 0.1},
+            {"name": "r_end", "label": "End Radius (mm) — ~80% of substrate/2", "type": "float", "default": 10.0, "min": 2, "max": 20, "step": 0.5},
+            {"name": "trace_w", "label": "Trace Width (mm) — spacing must be ≥ trace_w", "type": "float", "default": 0.8, "min": 0.2, "max": 3, "step": 0.1},
             {"name": "spiral_pts", "label": "Resolution (points)", "type": "int", "default": 200, "min": 50, "max": 1000, "step": 50},
-            {"name": "pad_size", "label": "Pad Size (mm)", "type": "float", "default": 3.0, "min": 1, "max": 10, "step": 0.5},
+            {"name": "pad_size", "label": "Pad Size (mm)", "type": "float", "default": 3.0, "min": 1.5, "max": 10, "step": 0.5},
         ]
     },
     "polygon": {
         "label": "Custom Polygon",
-        "description": "Define any closed shape by listing its vertices (x,y pairs).",
+        "description": "Define any closed shape by listing vertices (x,y pairs in mm). Auto-scaled to fit substrate.",
+        "tip": "Minimum 3 vertices. Coordinates auto-scaled to fit within substrate boundaries.",
         "params": [
             {"name": "vertices", "label": "Vertices (x1,y1;x2,y2;...)", "type": "text", "default": "0,0;5,0;2.5,4.33", "placeholder": "0,0;5,0;2.5,4.33"},
-            {"name": "trace_w", "label": "Trace Width (mm)", "type": "float", "default": 0.5, "min": 0.1, "max": 3, "step": 0.1},
-            {"name": "pad_size", "label": "Pad Size (mm)", "type": "float", "default": 3.0, "min": 1, "max": 10, "step": 0.5},
+            {"name": "trace_w", "label": "Trace Width (mm)", "type": "float", "default": 0.8, "min": 0.2, "max": 3, "step": 0.1},
+            {"name": "pad_size", "label": "Pad Size (mm)", "type": "float", "default": 3.0, "min": 1.5, "max": 10, "step": 0.5},
         ]
     },
 }
@@ -153,41 +162,41 @@ def build_params(elec_type, form):
 
     if elec_type == "ide":
         return IDEParams(width_mm=w, height_mm=h, fingers=_f("fingers", 10),
-                         finger_w_mm=_f("finger_w", 0.5), gap_mm=_f("gap", 0.3),
-                         finger_l_mm=_f("finger_l", 15.0), pad_size_mm=_f("pad_size", 3.0),
-                         bus_w_mm=_f("bus_w", 1.0), margin_mm=_f("margin", 2.0))
+                         finger_w_mm=_f("finger_w", 1.0), gap_mm=_f("gap", 1.0),
+                         finger_l_mm=_f("finger_l", 10.0), pad_size_mm=_f("pad_size", 3.0),
+                         bus_w_mm=_f("bus_w", 2.0), margin_mm=_f("margin", 3.0))
     elif elec_type == "three":
         return ThreeElectrodeParams(width_mm=w, height_mm=h,
-                                    we_d_mm=_f("we_d", 3.0), ce_d_mm=_f("ce_d", 4.0),
-                                    re_d_mm=_f("re_d", 2.0), spacing_mm=_f("spacing", 5.0),
+                                    we_d_mm=_f("we_d", 3.0), ce_d_mm=_f("ce_d", 6.0),
+                                    re_d_mm=_f("re_d", 2.0), spacing_mm=_f("spacing", 3.0),
                                     pad_size_mm=_f("pad_size", 3.0))
     elif elec_type == "serpentine":
-        return SerpentineParams(width_mm=w, height_mm=h, trace_w_mm=_f("trace_w", 0.5),
-                                segments=_f("segments", 10), seg_l_mm=_f("seg_l", 2.0),
-                                seg_h_mm=_f("seg_h", 1.5), pad_size_mm=_f("pad_size", 3.0))
+        return SerpentineParams(width_mm=w, height_mm=h, trace_w_mm=_f("trace_w", 1.0),
+                                segments=_f("segments", 8), seg_l_mm=_f("seg_l", 3.0),
+                                seg_h_mm=_f("seg_h", 2.0), pad_size_mm=_f("pad_size", 3.0))
     elif elec_type == "ringdisk":
-        return RingDiskParams(width_mm=w, height_mm=h, disk_d_mm=_f("disk_d", 3.0),
-                              gap_mm=_f("gap", 0.2), ring_w_mm=_f("ring_w", 0.5),
+        return RingDiskParams(width_mm=w, height_mm=h, disk_d_mm=_f("disk_d", 5.0),
+                              gap_mm=_f("gap", 0.5), ring_w_mm=_f("ring_w", 1.5),
                               pad_size_mm=_f("pad_size", 3.0))
     elif elec_type == "array":
         return ArrayParams(width_mm=w, height_mm=h, rows=_f("rows", 4), cols=_f("cols", 4),
-                           electrode_d_mm=_f("electrode_d", 2.0), pitch_x_mm=_f("pitch_x", 5.0),
-                           pitch_y_mm=_f("pitch_y", 5.0), pad_size_mm=_f("pad_size", 2.0))
+                           electrode_d_mm=_f("electrode_d", 2.0), pitch_x_mm=_f("pitch_x", 6.0),
+                           pitch_y_mm=_f("pitch_y", 6.0), pad_size_mm=_f("pad_size", 3.0))
     elif elec_type == "meander":
-        return MeanderParams(width_mm=w, height_mm=h, trace_w_mm=_f("trace_w", 0.5),
-                             segments=_f("segments", 6), seg_l_mm=_f("seg_l", 3.0),
-                             seg_h_mm=_f("seg_h", 2.0), meander_n=_f("meander_n", 8),
-                             meander_amp_mm=_f("meander_amp", 0.8), pad_size_mm=_f("pad_size", 3.0))
+        return MeanderParams(width_mm=w, height_mm=h, trace_w_mm=_f("trace_w", 1.0),
+                             segments=_f("segments", 6), seg_l_mm=_f("seg_l", 4.0),
+                             seg_h_mm=_f("seg_h", 2.5), meander_n=_f("meander_n", 6),
+                             meander_amp_mm=_f("meander_amp", 1.0), pad_size_mm=_f("pad_size", 3.0))
     elif elec_type == "carray":
         return CircularArrayParams(width_mm=w, height_mm=h, rings=_f("rings", 3),
                                    electrodes_per_ring=_f("epr", 8),
-                                   electrode_d_mm=_f("electrode_d", 1.5),
-                                   ring_spacing_mm=_f("ring_spacing", 4.0),
+                                   electrode_d_mm=_f("electrode_d", 2.0),
+                                   ring_spacing_mm=_f("ring_spacing", 5.0),
                                    pad_size_mm=_f("pad_size", 3.0))
     elif elec_type == "spiral":
         return SpiralParams(width_mm=w, height_mm=h, turns=_f("turns", 5),
-                            r_start_mm=_f("r_start", 0.5), r_end_mm=_f("r_end", 10.0),
-                            trace_w_mm=_f("trace_w", 0.5), n_points=_f("spiral_pts", 200),
+                            r_start_mm=_f("r_start", 1.0), r_end_mm=_f("r_end", 10.0),
+                            trace_w_mm=_f("trace_w", 0.8), n_points=_f("spiral_pts", 200),
                             pad_size_mm=_f("pad_size", 3.0))
     elif elec_type == "polygon":
         return PolygonParams(width_mm=w, height_mm=h,

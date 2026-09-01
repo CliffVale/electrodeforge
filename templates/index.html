@@ -258,6 +258,7 @@
             {% endfor %}
         </div>
         <div class="desc" id="type-desc">{{ schema['ide']['description'] }}</div>
+        <div class="tip" id="type-tip" style="display:none;padding:0.6rem 0.8rem;margin:0.5rem 0;background:rgba(96,165,250,0.1);border-left:3px solid var(--accent);border-radius:0 6px 6px 0;font-size:0.8rem;color:#94a3b8;">💡 {{ schema['ide'].get('tip', '') }}</div>
 
         <!-- Substrate -->
         <div class="section-title">Substrate</div>
@@ -354,6 +355,10 @@ document.querySelectorAll('.type-btn').forEach(btn => {
         btn.classList.add('active');
         currentType = btn.dataset.type;
         document.getElementById('type-desc').textContent = SCHEMA[currentType].description;
+        const tipEl = document.getElementById('type-tip');
+        const tip = SCHEMA[currentType].tip;
+        if (tip) { tipEl.style.display = 'block'; tipEl.textContent = '💡 ' + tip; }
+        else { tipEl.style.display = 'none'; }
         buildParams(currentType);
     });
 });
