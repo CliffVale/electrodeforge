@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ElectrodeForge — Free Parametric Electrode Generator</title>
-<meta name="description" content="Generate DXF, SVG, and G-code files for interdigitated, three-electrode, serpentine, spiral, and custom electrode designs. Free, no login required.">
+<meta name="description" content="Generate DXF and SVG files for interdigitated, three-electrode, serpentine, spiral, and custom electrode designs. Free, no login required.">
 <style>
 :root{--bg:#0a0e1a;--surface:#111827;--surface2:#1a2236;--border:#1e293b;--text:#e2e8f0;--muted:#94a3b8;--accent:#60a5fa;--accent2:#a78bfa;--green:#34d399;--orange:#fb923c;--red:#f87171;--radius:10px}
 *{margin:0;padding:0;box-sizing:border-box}
@@ -14,89 +14,88 @@ a:hover{text-decoration:underline}
 .container{max-width:1200px;margin:0 auto;padding:0 1.5rem}
 
 /* ── Hero ── */
-.hero{text-align:center;padding:3rem 1rem 2rem;background:linear-gradient(135deg,rgba(96,165,250,0.08),rgba(167,139,250,0.08))}
-.hero h1{font-size:2.5rem;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.hero .tagline{color:var(--muted);font-size:1.1rem;margin:0.5rem 0 1.5rem}
-.hero .badges{display:flex;gap:0.5rem;justify-content:center;flex-wrap:wrap}
-.badge{display:inline-flex;align-items:center;gap:0.3rem;padding:0.3rem 0.8rem;border-radius:20px;font-size:0.75rem;font-weight:600}
+.hero{text-align:center;padding:2.5rem 1rem 1.5rem;background:linear-gradient(135deg,rgba(96,165,250,0.08),rgba(167,139,250,0.08))}
+.hero h1{font-size:2.2rem;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero .tagline{color:var(--muted);font-size:1rem;margin:0.4rem 0 1rem}
+.hero .badges{display:flex;gap:0.4rem;justify-content:center;flex-wrap:wrap}
+.badge{display:inline-flex;align-items:center;gap:0.25rem;padding:0.25rem 0.7rem;border-radius:20px;font-size:0.72rem;font-weight:600}
 .badge.blue{background:rgba(96,165,250,0.15);color:var(--accent)}
 .badge.green{background:rgba(52,211,153,0.15);color:var(--green)}
 .badge.purple{background:rgba(167,139,250,0.15);color:var(--accent2)}
 .badge.orange{background:rgba(251,146,60,0.15);color:var(--orange)}
 
-/* ── Navigation ── */
-nav{background:var(--surface);border-bottom:1px solid var(--border);padding:0.8rem 0;position:sticky;top:0;z-index:100}
+/* ── Nav ── */
+nav{background:var(--surface);border-bottom:1px solid var(--border);padding:0.7rem 0;position:sticky;top:0;z-index:100}
 nav .container{display:flex;justify-content:space-between;align-items:center}
-nav .brand{font-weight:700;font-size:1.1rem;color:var(--accent)}
-nav a.btn{padding:0.4rem 1rem;border-radius:6px;font-size:0.85rem;font-weight:600;background:var(--accent);color:#000;border:none;cursor:pointer;text-decoration:none}
+nav .brand{font-weight:700;font-size:1rem;color:var(--accent)}
+nav a.btn{padding:0.35rem 0.9rem;border-radius:6px;font-size:0.82rem;font-weight:600;background:var(--accent);color:#000;border:none;cursor:pointer;text-decoration:none}
 nav a.btn:hover{opacity:0.9;text-decoration:none}
 
-/* ── Tool Section ── */
-.tool-section{padding:2rem 0}
-.tool-section h2{font-size:1.5rem;font-weight:700;margin-bottom:1rem;text-align:center}
+/* ── Tool ── */
+.tool-section{padding:1.5rem 0}
+.tool-section h2{font-size:1.3rem;font-weight:700;margin-bottom:1rem;text-align:center}
 .tool-section h2 span{color:var(--accent)}
 
-.tool-layout{display:grid;grid-template-columns:320px 1fr;gap:1.5rem;align-items:start}
+.tool-layout{display:grid;grid-template-columns:300px 1fr;gap:1.2rem;align-items:start}
 @media(max-width:900px){.tool-layout{grid-template-columns:1fr}}
 
 /* ── Sidebar ── */
-.sidebar{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.2rem;position:sticky;top:70px}
-.sidebar h3{font-size:0.9rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.8rem}
+.sidebar{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;position:sticky;top:65px}
+.sidebar h3{font-size:0.8rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.6rem}
 
-.type-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0.4rem;margin-bottom:1.2rem}
-.type-btn{padding:0.5rem 0.3rem;border:2px solid var(--border);border-radius:6px;background:var(--surface2);color:var(--muted);font-size:0.7rem;font-weight:600;cursor:pointer;text-align:center;transition:all 0.15s}
+.type-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0.35rem;margin-bottom:1rem}
+.type-btn{padding:0.45rem 0.25rem;border:2px solid var(--border);border-radius:6px;background:var(--surface2);color:var(--muted);font-size:0.68rem;font-weight:600;cursor:pointer;text-align:center;transition:all 0.15s}
 .type-btn:hover{border-color:var(--accent);color:var(--text)}
 .type-btn.active{border-color:var(--accent);background:rgba(96,165,250,0.1);color:var(--accent)}
-.type-btn .icon{font-size:1.1rem;display:block;margin-bottom:0.2rem}
+.type-btn .icon{font-size:1rem;display:block;margin-bottom:0.15rem}
 
-.param-group{margin-bottom:1rem}
-.param-group label{display:flex;justify-content:space-between;font-size:0.8rem;color:var(--muted);margin-bottom:0.3rem}
+.param-group{margin-bottom:0.8rem}
+.param-group label{display:flex;justify-content:space-between;font-size:0.75rem;color:var(--muted);margin-bottom:0.2rem}
 .param-group label span{color:var(--accent);font-weight:600}
 .param-group input[type=range]{width:100%;accent-color:var(--accent);height:4px}
-.param-group input[type=number],.param-group input[type=text]{width:100%;padding:0.4rem 0.6rem;border:1px solid var(--border);border-radius:6px;background:var(--surface2);color:var(--text);font-size:0.85rem}
+.param-group input[type=number],.param-group input[type=text]{width:100%;padding:0.35rem 0.5rem;border:1px solid var(--border);border-radius:6px;background:var(--surface2);color:var(--text);font-size:0.82rem}
 .param-group input:focus{outline:none;border-color:var(--accent)}
 
-.btn-row{display:flex;gap:0.5rem;margin-top:1rem}
-.btn-primary{flex:1;padding:0.6rem;border:none;border-radius:6px;background:var(--accent);color:#000;font-weight:700;font-size:0.85rem;cursor:pointer}
+.btn-row{display:flex;gap:0.4rem;margin-top:0.8rem}
+.btn-primary{flex:1;padding:0.5rem;border:none;border-radius:6px;background:var(--accent);color:#000;font-weight:700;font-size:0.82rem;cursor:pointer}
 .btn-primary:hover{opacity:0.85}
-.btn-secondary{flex:1;padding:0.6rem;border:1px solid var(--border);border-radius:6px;background:var(--surface2);color:var(--text);font-weight:600;font-size:0.85rem;cursor:pointer}
+.btn-secondary{flex:1;padding:0.5rem;border:1px solid var(--border);border-radius:6px;background:var(--surface2);color:var(--text);font-weight:600;font-size:0.82rem;cursor:pointer}
 .btn-secondary:hover{border-color:var(--accent)}
 
-/* ── Preview Panel ── */
-.preview-panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;min-height:500px}
-.preview-panel h3{font-size:0.9rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:1rem}
-.preview-svg{background:#fff;border-radius:6px;padding:1rem;min-height:350px;display:flex;align-items:center;justify-content:center}
-.preview-svg svg{max-width:100%;max-height:400px}
-.preview-info{margin-top:1rem;font-size:0.8rem;color:var(--muted);line-height:1.8}
-.preview-info .tag{display:inline-block;padding:0.15rem 0.5rem;border-radius:4px;font-size:0.7rem;font-weight:600;margin-right:0.3rem}
+/* ── Preview ── */
+.preview-panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.2rem;min-height:400px}
+.preview-panel h3{font-size:0.8rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.8rem}
+.preview-svg{background:#fff;border-radius:6px;padding:0.8rem;min-height:300px;display:flex;align-items:center;justify-content:center}
+.preview-svg svg{max-width:100%;max-height:350px}
+.preview-info{margin-top:0.8rem;font-size:0.78rem;color:var(--muted);line-height:1.7}
+.preview-info .tag{display:inline-block;padding:0.12rem 0.45rem;border-radius:4px;font-size:0.68rem;font-weight:600;margin-right:0.25rem}
 .tag.dxf{background:rgba(96,165,250,0.15);color:var(--accent)}
 .tag.svg{background:rgba(52,211,153,0.15);color:var(--green)}
-.tag.gcode{background:rgba(251,146,60,0.15);color:var(--orange)}
 
 /* ── Design Guide ── */
-.guide{padding:3rem 0;background:rgba(96,165,250,0.03)}
-.guide h2{text-align:center;font-size:1.5rem;margin-bottom:1.5rem}
+.guide{padding:2.5rem 0;background:rgba(96,165,250,0.03)}
+.guide h2{text-align:center;font-size:1.3rem;margin-bottom:1.2rem}
 .guide h2 span{color:var(--accent)}
-.guide-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.2rem}
-.guide-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.2rem}
-.guide-card h4{color:var(--accent);margin-bottom:0.5rem;font-size:0.95rem}
-.guide-card p{color:var(--muted);font-size:0.85rem}
-.guide-card ul{margin-top:0.5rem;padding-left:1.2rem}
-.guide-card li{color:var(--muted);font-size:0.82rem;margin-bottom:0.3rem}
-.guide-card .ref{font-size:0.72rem;color:#64748b;margin-top:0.5rem;font-style:italic}
+.guide-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem}
+.guide-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1rem}
+.guide-card h4{color:var(--accent);margin-bottom:0.4rem;font-size:0.9rem}
+.guide-card p{color:var(--muted);font-size:0.82rem}
+.guide-card ul{margin-top:0.4rem;padding-left:1.1rem}
+.guide-card li{color:var(--muted);font-size:0.78rem;margin-bottom:0.25rem}
+.guide-card .ref{font-size:0.7rem;color:#64748b;margin-top:0.4rem;font-style:italic}
 
 /* ── Features ── */
-.features{padding:3rem 0}
-.features h2{text-align:center;font-size:1.5rem;margin-bottom:1.5rem}
+.features{padding:2.5rem 0}
+.features h2{text-align:center;font-size:1.3rem;margin-bottom:1.2rem}
 .features h2 span{color:var(--accent)}
-.feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1rem}
-.feat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.2rem;text-align:center}
-.feat-card .icon{font-size:2rem;margin-bottom:0.5rem}
-.feat-card h4{font-size:0.95rem;margin-bottom:0.3rem}
-.feat-card p{color:var(--muted);font-size:0.82rem}
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:0.8rem}
+.feat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;text-align:center}
+.feat-card .icon{font-size:1.8rem;margin-bottom:0.4rem}
+.feat-card h4{font-size:0.9rem;margin-bottom:0.2rem}
+.feat-card p{color:var(--muted);font-size:0.78rem}
 
 /* ── Footer ── */
-footer{text-align:center;padding:2rem;border-top:1px solid var(--border);color:var(--muted);font-size:0.8rem}
+footer{text-align:center;padding:1.5rem;border-top:1px solid var(--border);color:var(--muted);font-size:0.78rem}
 </style>
 </head>
 <body>
@@ -112,8 +111,8 @@ footer{text-align:center;padding:2rem;border-top:1px solid var(--border);color:v
 <h1>ElectrodeForge</h1>
 <p class="tagline">Free parametric electrode generator for screen printing, laser cutting (LIG), and CNC</p>
 <div class="badges">
-  <span class="badge blue">9 Electrode Types</span>
-  <span class="badge green">DXF + SVG + G-code</span>
+  <span class="badge blue">8 Electrode Types</span>
+  <span class="badge green">DXF + SVG Export</span>
   <span class="badge purple">No Login Required</span>
   <span class="badge orange">100% Client-Side</span>
 </div>
@@ -137,7 +136,6 @@ footer{text-align:center;padding:2rem;border-top:1px solid var(--border);color:v
         <button class="type-btn" data-type="meander" onclick="selectType('meander')"><span class="icon">∿</span>Meander</button>
         <button class="type-btn" data-type="carray" onclick="selectType('carray')"><span class="icon">⊙</span>Circ Arr</button>
         <button class="type-btn" data-type="spiral" onclick="selectType('spiral')"><span class="icon">🌀</span>Spiral</button>
-        <button class="type-btn" data-type="ide_variants" onclick="selectType('ide_variants')"><span class="icon">⚡</span>5×IDE</button>
       </div>
 
       <div id="params-container"></div>
@@ -145,7 +143,7 @@ footer{text-align:center;padding:2rem;border-top:1px solid var(--border);color:v
       <div class="btn-row">
         <button class="btn-primary" onclick="preview()">👁 Preview</button>
       </div>
-      <div class="btn-row" style="margin-top:0.5rem">
+      <div class="btn-row" style="margin-top:0.4rem">
         <button class="btn-secondary" onclick="downloadDXF()">⬇ DXF</button>
         <button class="btn-secondary" onclick="downloadSVG()">⬇ SVG</button>
       </div>
@@ -173,7 +171,7 @@ footer{text-align:center;padding:2rem;border-top:1px solid var(--border);color:v
 <section class="guide" id="guide">
 <div class="container">
   <h2>📋 Scientific <span>Design Guide</span></h2>
-  <p style="text-align:center;color:var(--muted);max-width:700px;margin:0 auto 1.5rem;font-size:0.9rem">Validated design rules from peer-reviewed literature. Every default is based on published specifications.</p>
+  <p style="text-align:center;color:var(--muted);max-width:700px;margin:0 auto 1.2rem;font-size:0.85rem">Validated design rules from peer-reviewed literature. Every default is based on published specifications.</p>
   <div class="guide-grid">
 
     <div class="guide-card">
@@ -262,8 +260,8 @@ footer{text-align:center;padding:2rem;border-top:1px solid var(--border);color:v
     <div class="feat-card"><div class="icon">⚡</div><h4>Instant</h4><p>All processing runs in your browser. No server upload needed.</p></div>
     <div class="feat-card"><div class="icon">📐</div><h4>Precise</h4><p>Scientifically validated defaults from peer-reviewed literature.</p></div>
     <div class="feat-card"><div class="icon">🔧</div><h4>Parametric</h4><p>Adjust any dimension. Real-time preview updates instantly.</p></div>
-    <div class="feat-card"><div class="icon">🏭</div><h4>Multi-Format</h4><p>Export DXF (laser), SVG (Cricut), or G-code (CNC).</p></div>
-    <div class="feat-card"><div class="icon">🔬</div><h4>9 Electrode Types</h4><p>IDE, 3-electrode, serpentine, ring-disk, array, and more.</p></div>
+    <div class="feat-card"><div class="icon">🏭</div><h4>Multi-Format</h4><p>Export DXF (laser) or SVG (Cricut screen printing).</p></div>
+    <div class="feat-card"><div class="icon">🔬</div><h4>8 Electrode Types</h4><p>IDE, 3-electrode, serpentine, ring-disk, array, and more.</p></div>
   </div>
 </div>
 </section>
@@ -277,37 +275,36 @@ footer{text-align:center;padding:2rem;border-top:1px solid var(--border);color:v
 <script>
 // ══════════════════════════════════════════════════════════════════════
 // ElectrodeForge — Client-Side Electrode Generator
-// Generates DXF, SVG with live preview. 100% browser-based.
+// Generates DXF + SVG with live preview. 100% browser-based.
 // ══════════════════════════════════════════════════════════════════════
 
 let currentType = 'ide';
 let currentSVG = '';
-let currentDXF = '';
 
-// ── Default parameters per type ──
+// ── Default parameters ──
 const DEFAULTS = {
-  ide: {w:25,h:25,fingers:10,fw:1.0,gap:0.5,fl:15,pad:3,bus:2,margin:3},
+  ide: {subW:34,subH:10,overlapW:20,fingerW:0.5,fingerL:19.5,gap:1.5,padW:5,padH:5,busW:2},
   three: {w:25,h:25,we:3,ce:6,re:2,spacing:3,pad:3},
   serpentine: {w:25,h:25,tw:1,segments:8,segL:3,segH:2,pad:3},
   ringdisk: {w:25,h:25,diskD:5,gap:0.5,ringW:1.5,pad:3},
   array: {w:25,h:25,rows:4,cols:4,electrodeD:2,pitchX:6,pitchY:6,pad:3},
   meander: {w:25,h:25,tw:1,segments:6,segL:4,segH:2.5,meanderN:6,meanderAmp:1,pad:3},
   carray: {w:25,h:25,rings:3,epr:8,electrodeD:2,ringSpacing:5,pad:3},
-  spiral: {w:25,h:25,turns:5,rStart:1,rEnd:10,tw:0.8,pad:3},
-  ide_variants: {w:25,h:20,gaps:'0.5,1.0,1.5,2.0,2.5',ratio:0.5,fl:6,bus:2,pad:3}
+  spiral: {w:25,h:25,turns:5,rStart:1,rEnd:10,tw:0.8,pad:3}
 };
 
 // ── Parameter UI definitions ──
 const PARAM_DEFS = {
   ide: [
-    {id:'w',label:'Width (mm)',min:5,max:100,step:1},
-    {id:'h',label:'Height (mm)',min:5,max:100,step:1},
-    {id:'fingers',label:'Finger Pairs',min:2,max:50,step:1},
-    {id:'fw',label:'Finger Width (mm)',min:0.1,max:5,step:0.1},
-    {id:'gap',label:'Gap (mm)',min:0.1,max:5,step:0.1},
-    {id:'fl',label:'Finger Length (mm)',min:1,max:50,step:0.5},
-    {id:'pad',label:'Pad Size (mm)',min:1,max:10,step:0.5},
-    {id:'bus',label:'Bus Bar (mm)',min:0.5,max:10,step:0.5},
+    {id:'subW',label:'Substrate Width (mm)',min:15,max:60,step:1},
+    {id:'subH',label:'Substrate Height (mm)',min:5,max:30,step:0.5},
+    {id:'overlapW',label:'Overlap Zone Width (mm)',min:5,max:40,step:1},
+    {id:'fingerW',label:'Finger Width (mm)',min:0.1,max:3,step:0.1},
+    {id:'fingerL',label:'Finger Length (mm)',min:2,max:50,step:0.5},
+    {id:'gap',label:'Gap Between Fingers (mm)',min:0.2,max:5,step:0.1},
+    {id:'padW',label:'Pad Width (mm)',min:2,max:15,step:0.5},
+    {id:'padH',label:'Pad Height (mm)',min:2,max:15,step:0.5},
+    {id:'busW',label:'Bus Bar Width (mm)',min:0.5,max:5,step:0.5},
   ],
   three: [
     {id:'w',label:'Width (mm)',min:5,max:100,step:1},
@@ -373,15 +370,6 @@ const PARAM_DEFS = {
     {id:'rEnd',label:'Outer Radius (mm)',min:1,max:50,step:0.5},
     {id:'tw',label:'Trace Width (mm)',min:0.1,max:3,step:0.1},
     {id:'pad',label:'Pad Size (mm)',min:1,max:10,step:0.5},
-  ],
-  ide_variants: [
-    {id:'w',label:'Substrate W (mm)',min:10,max:50,step:1},
-    {id:'h',label:'Substrate H (mm)',min:10,max:50,step:1},
-    {id:'ratio',label:'Metallization Ratio',min:0.1,max:0.9,step:0.05},
-    {id:'fl',label:'Finger Length (mm)',min:2,max:20,step:0.5},
-    {id:'bus',label:'Bus Bar (mm)',min:0.5,max:5,step:0.5},
-    {id:'pad',label:'Pad Size (mm)',min:1,max:10,step:0.5},
-    {id:'gaps',label:'Gaps (comma-separated mm)',text:true},
   ]
 };
 
@@ -389,7 +377,7 @@ const PARAM_DEFS = {
 function selectType(type) {
   currentType = type;
   document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
-  document.querySelector(`[data-type="${type}"]`).classList.add('active');
+  document.querySelector('[data-type="'+type+'"]').classList.add('active');
   buildParams(type);
   preview();
 }
@@ -401,15 +389,9 @@ function buildParams(type) {
   const defaults = DEFAULTS[type] || {};
   let html = '';
   for (const d of defs) {
-    const val = defaults[d.id] !== undefined ? defaults[d.id] : (d.text ? '' : d.min);
-    if (d.text) {
-      // Text input (e.g. gaps comma-separated)
-      html += `<div class="param-group"><label>${d.label} <span style="color:var(--orange)">editable</span></label>
-        <input type="text" id="p_${d.id}" value="${val}" onchange="preview()"></div>`;
-    } else {
-      html += `<div class="param-group"><label>${d.label} <span id="v_${d.id}">${val}</span></label>
-        <input type="range" id="p_${d.id}" value="${val}" min="${d.min}" max="${d.max}" step="${d.step}" oninput="document.getElementById('v_${d.id}').textContent=this.value;preview()"></div>`;
-    }
+    const val = defaults[d.id] !== undefined ? defaults[d.id] : d.min;
+    html += '<div class="param-group"><label>'+d.label+' <span id="v_'+d.id+'">'+val+'</span></label>'+
+      '<input type="range" id="p_'+d.id+'" value="'+val+'" min="'+d.min+'" max="'+d.max+'" step="'+d.step+'" oninput="document.getElementById(\'v_'+d.id+'\').textContent=this.value;preview()"></div>';
   }
   c.innerHTML = html;
 }
@@ -420,58 +402,45 @@ function getParams() {
   const defs = PARAM_DEFS[currentType] || [];
   for (const d of defs) {
     const el = document.getElementById('p_' + d.id);
-    p[d.id] = el ? (d.text ? el.value : parseFloat(el.value)) : DEFAULTS[currentType][d.id];
+    p[d.id] = el ? parseFloat(el.value) : DEFAULTS[currentType][d.id];
   }
   return p;
 }
 
 // ── SVG helpers ──
 function svgRect(x,y,w,h,fill,stroke,sw) {
-  return `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${fill||'#000'}" stroke="${stroke||'none'}" stroke-width="${sw||0.02}"/>`;
+  return '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" fill="'+(fill||'#000')+'" stroke="'+(stroke||'none')+'" stroke-width="'+(sw||0.02)+'"/>';
 }
 function svgCircle(cx,cy,r,fill,stroke,sw) {
-  return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${fill||'#000'}" stroke="${stroke||'none'}" stroke-width="${sw||0.02}"/>`;
+  return '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="'+(fill||'#000')+'" stroke="'+(stroke||'none')+'" stroke-width="'+(sw||0.02)+'"/>';
 }
 function svgPoly(pts,fill,stroke,sw) {
-  const d = pts.map((p,i)=>(i===0?'M':'L')+p[0]+','+p[1]).join(' ')+' Z';
-  return `<path d="${d}" fill="${fill||'#000'}" stroke="${stroke||'none'}" stroke-width="${sw||0.02}"/>`;
+  const d = pts.map(function(p,i){return(i===0?'M':'L')+p[0]+','+p[1]}).join(' ')+' Z';
+  return '<path d="'+d+'" fill="'+(fill||'#000')+'" stroke="'+(stroke||'none')+'" stroke-width="'+(sw||0.02)+'"/>';
 }
 function svgLine(x1,y1,x2,y2,stroke,sw) {
-  return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${stroke||'#000'}" stroke-width="${sw||0.05}"/>`;
+  return '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="'+(stroke||'#000')+'" stroke-width="'+(sw||0.05)+'"/>';
 }
 
 // ── DXF helpers ──
-let dxfEntities = [];
+var dxfEntities = [];
 function dxfInit() { dxfEntities = []; }
-function dxfAdd(type, args) { dxfEntities.push({type, ...args}); }
-function dxfPolyline(pts, layer, closed) {
-  dxfAdd('LWPOLYLINE', {pts: pts, layer: layer||'0', closed: closed!==false});
-}
-function dxfCircle(cx,cy,r,layer) {
-  dxfAdd('CIRCLE', {cx,cy,r,layer:layer||'0'});
-}
-function dxfLine(x1,y1,x2,y2,layer) {
-  dxfAdd('LINE', {x1,y1,x2,y2,layer:layer||'0'});
-}
-function dxfRect(x,y,w,h,layer) {
-  dxfPolyline([[x,y],[x+w,y],[x+w,y+h],[x,y+h],[x,y]], layer, true);
-}
-function dxfText(str,x,y,layer,h) {
-  dxfAdd('TEXT', {str,x,y,layer:layer||'0',h:h||0.8});
-}
+function dxfPolyline(pts, layer, closed) { dxfEntities.push({type:'LWPOLYLINE',pts:pts,layer:layer||'0',closed:closed!==false}); }
+function dxfCircle(cx,cy,r,layer) { dxfEntities.push({type:'CIRCLE',cx:cx,cy:cy,r:r,layer:layer||'0'}); }
+function dxfLine(x1,y1,x2,y2,layer) { dxfEntities.push({type:'LINE',x1:x1,y1:y1,x2:x2,y2:y2,layer:layer||'0'}); }
+function dxfRect(x,y,w,h,layer) { dxfPolyline([[x,y],[x+w,y],[x+w,y+h],[x,y+h],[x,y]], layer, true); }
 
 function dxfBuild() {
-  let out = '0\nSECTION\n2\nENTITIES\n';
-  for (const e of dxfEntities) {
+  var out = '0\nSECTION\n2\nENTITIES\n';
+  for (var i = 0; i < dxfEntities.length; i++) {
+    var e = dxfEntities[i];
     if (e.type === 'LWPOLYLINE') {
       out += '0\nLWPOLYLINE\n8\n' + (e.layer||'0') + '\n90\n' + e.pts.length + '\n70\n' + (e.closed?1:0) + '\n';
-      for (const p of e.pts) out += '10\n' + p[0].toFixed(4) + '\n20\n' + p[1].toFixed(4) + '\n';
+      for (var j = 0; j < e.pts.length; j++) out += '10\n' + e.pts[j][0].toFixed(4) + '\n20\n' + e.pts[j][1].toFixed(4) + '\n';
     } else if (e.type === 'CIRCLE') {
       out += '0\nCIRCLE\n8\n' + (e.layer||'0') + '\n10\n' + e.cx.toFixed(4) + '\n20\n' + e.cy.toFixed(4) + '\n40\n' + e.r.toFixed(4) + '\n';
     } else if (e.type === 'LINE') {
       out += '0\nLINE\n8\n' + (e.layer||'0') + '\n10\n' + e.x1.toFixed(4) + '\n20\n' + e.y1.toFixed(4) + '\n11\n' + e.x2.toFixed(4) + '\n21\n' + e.y2.toFixed(4) + '\n';
-    } else if (e.type === 'TEXT') {
-      out += '0\nTEXT\n8\n' + (e.layer||'0') + '\n10\n' + e.x.toFixed(4) + '\n20\n' + e.y.toFixed(4) + '\n40\n' + (e.h||0.8) + '\n1\n' + e.str + '\n';
     }
   }
   out += '0\nENDSEC\n0\nEOF\n';
@@ -480,301 +449,300 @@ function dxfBuild() {
 
 // ── Circle points ──
 function circlePts(cx,cy,r,n) {
-  const pts = [];
-  for (let i=0; i<=n; i++) {
-    const a = 2*Math.PI*i/n;
+  var pts = [];
+  for (var i=0; i<=n; i++) {
+    var a = 2*Math.PI*i/n;
     pts.push([cx+r*Math.cos(a), cy+r*Math.sin(a)]);
   }
   return pts;
 }
 
 // ══════════════════════════════════════════════════════════════════════
-// Electrode generators (SVG + DXF)
+// IDE — Horizontal bus bars with side connection pads
+// Layout matches SPCE IDE: bus bars on left/right, pads on far sides,
+// horizontal fingers interdigitating in the centre overlap zone.
 // ══════════════════════════════════════════════════════════════════════
 
 function genIDE(p) {
-  const n=p.fingers, fw=p.fw, gap=p.gap, fl=p.fl, ps=p.pad, bw=p.bus, mg=p.margin;
-  const totalW = n*fw+(n-1)*gap;
-  const x0=(p.w-totalW)/2, busTopY=mg+fl+bw, busBotY=mg;
-  let svg='', info='';
+  var subW = p.subW, subH = p.subH;
+  var overlapW = p.overlapW, fingerW = p.fingerW, fingerL = p.fingerL;
+  var gap = p.gap, padW = p.padW, padH = p.padH, busW = p.busW;
+
+  // Derived: number of finger pairs that fit vertically
+  var pitch = fingerW + gap;
+  var nPairs = Math.floor((subH - fingerW) / pitch) + 1;
+  if (nPairs < 1) nPairs = 1;
+
+  // Centre the finger array vertically
+  var totalFingersH = (2*nPairs - 1) * pitch + fingerW;
+  var yStart = (subH - totalFingersH) / 2;
+
+  // Horizontal positions
+  var busLeftX = overlapW;            // Left bus bar right edge
+  var busRightX = overlapW + busW;    // Right bus bar left edge... no wait
+  // Actually: bus bars are at the edges of the overlap zone
+  // Left bus: x = overlapW - busW ... x = overlapW
+  // Right bus: x = overlapW ... x = overlapW + busW
+  // But for a cleaner layout matching the reference:
+  // Left bus at x = 0, width = busW
+  // Right bus at x = overlapW, width = busW
+  // Fingers from left bus extend right, fingers from right bus extend left
+  // Total substrate = padW + busW + overlapW + busW + padW
+
+  var totalW = padW + busW + overlapW + busW + padW;
+  // Recalculate substrate to fit
+  subW = totalW;
+
+  var leftBusX = padW;
+  var rightBusX = padW + busW + overlapW;
+  var fingerStartX = padW + busW;
+  var fingerEndX = padW + busW + overlapW;
+
+  // Fingers from LEFT bus (Electrode A) — extend right
+  // Fingers from RIGHT bus (Electrode B) — extend left
+  // Interleave: A, B, A, B, ...
+
   dxfInit();
-  // Substrate
-  svg+=svgRect(0,0,p.w,p.h,'#f0f0f0','#ccc',0.05);
-  dxfRect(0,0,p.w,p.h,'SUBSTRATE');
-  // Bus A
-  const baX=x0-1, baW=totalW+2;
-  svg+=svgRect(baX,busTopY,baW,bw,'#e74c3c');
-  dxfRect(baX,busTopY,baW,bw,'ELECTRODE_A');
-  // Bus B
-  svg+=svgRect(x0-1,busBotY-bw,totalW+2,bw,'#3498db');
-  dxfRect(x0-1,busBotY-bw,totalW+2,bw,'ELECTRODE_B');
-  // Fingers
-  for (let i=0;i<n;i++) {
-    const fx=x0+i*(fw+gap);
-    if (i%2===0) {
-      svg+=svgRect(fx,busTopY-fl,fw,fl,'#e74c3c');
-      dxfRect(fx,busTopY-fl,fw,fl,'ELECTRODE_A');
-    } else {
-      svg+=svgRect(fx,busBotY,fw,fl,'#3498db');
-      dxfRect(fx,busBotY,fw,fl,'ELECTRODE_B');
+  var svg = '';
+
+  // Substrate outline
+  svg += svgRect(0, 0, subW, subH, '#f0f0f0', '#ccc', 0.04);
+  dxfRect(0, 0, subW, subH, 'SUBSTRATE');
+
+  // Left bus bar (Electrode A)
+  svg += svgRect(leftBusX, 0, busW, subH, '#e74c3c');
+  dxfRect(leftBusX, 0, busW, subH, 'ELECTRODE_A');
+
+  // Right bus bar (Electrode B)
+  svg += svgRect(rightBusX, 0, busW, subH, '#3498db');
+  dxfRect(rightBusX, 0, busW, subH, 'ELECTRODE_B');
+
+  // Left connection pad (Electrode A)
+  var leftPadX = 0;
+  var leftPadY = (subH - padH) / 2;
+  svg += svgRect(leftPadX, leftPadY, padW, padH, '#e74c3c');
+  dxfRect(leftPadX, leftPadY, padW, padH, 'PAD');
+
+  // Right connection pad (Electrode B)
+  var rightPadX = rightBusX + busW;
+  var rightPadY = (subH - padH) / 2;
+  svg += svgRect(rightPadX, rightPadY, padW, padH, '#3498db');
+  dxfRect(rightPadX, rightPadY, padW, padH, 'PAD');
+
+  // Fingers — interleaved from left and right buses
+  for (var i = 0; i < nPairs; i++) {
+    var y = yStart + i * pitch;
+
+    // Left finger (from bus A) — extends from bus right edge to near right bus
+    var lx = fingerStartX;
+    var ly = y;
+    svg += svgRect(lx, ly, fingerL, fingerW, '#e74c3c');
+    dxfRect(lx, ly, fingerL, fingerW, 'ELECTRODE_A');
+
+    // Right finger (from bus B) — extends from right bus left edge to near left bus
+    var rx = fingerEndX - fingerL;
+    var ry = y + fingerW + gap;  // offset by one pitch to interleave
+    if (ry + fingerW <= subH) {
+      svg += svgRect(rx, ry, fingerL, fingerW, '#3498db');
+      dxfRect(rx, ry, fingerL, fingerW, 'ELECTRODE_B');
     }
   }
-  // Pads
-  const paX=baX-ps-1, paY=busTopY+(bw-ps)/2;
-  svg+=svgRect(paX,paY,ps,ps,'#27ae60');
-  dxfRect(paX,paY,ps,ps,'PAD');
-  svg+=svgLine(paX+ps,paY+ps/2,baX,busTopY+bw/2,'#27ae60',0.08);
-  dxfLine(paX+ps,paY+ps/2,baX,busTopY+bw/2,'PAD');
-  const pbX=baX+baW+1, pbY=busBotY-bw+(bw-ps)/2;
-  svg+=svgRect(pbX,pbY,ps,ps,'#27ae60');
-  dxfRect(pbX,pbY,ps,ps,'PAD');
-  svg+=svgLine(pbX,pbY+ps/2,baX+baW,busBotY-bw/2,'#27ae60',0.08);
-  dxfLine(pbX,pbY+ps/2,baX+baW,busBotY-bw/2,'PAD');
-  currentSVG = `<svg viewBox="0 0 ${p.w} ${p.h}" xmlns="http://www.w3.org/2000/svg">${svg}</svg>`;
-  info = `<span class="tag dxf">DXF</span><span class="tag svg">SVG</span> IDE: ${n} pairs, fw=${fw}mm, gap=${gap}mm, fl=${fl}mm<br>Metallization: ${(fw/(fw+gap)).toFixed(2)} | Pitch: ${(fw+gap).toFixed(1)}mm | Bus: ${bw}mm | Pad: ${ps}mm`;
-  return info;
+
+  // Info text
+  var metRatio = fingerW / pitch;
+  currentSVG = '<svg viewBox="0 0 '+subW+' '+subH+'" xmlns="http://www.w3.org/2000/svg">'+svg+'</svg>';
+  return '<span class="tag dxf">DXF</span><span class="tag svg">SVG</span> IDE: '+nPairs+' pairs × 2 buses<br>'+
+    'Finger: '+fingerW+'mm × '+fingerL+'mm | Gap: '+gap+'mm | Pitch: '+pitch.toFixed(1)+'mm<br>'+
+    'Bus: '+busW+'mm | Pad: '+padW+'×'+padH+'mm | Metallization: '+metRatio.toFixed(2)+'<br>'+
+    'Substrate: '+subW+'×'+subH+'mm | Overlap: '+overlapW+'×'+subH+'mm';
 }
+
+// ══════════════════════════════════════════════════════════════════════
+// Three-electrode system
+// ══════════════════════════════════════════════════════════════════════
 
 function genThree(p) {
-  const cx=p.w/2, cy=p.h/2, weR=p.we/2, ceGap=0.3, ceRI=weR+ceGap, ceRO=ceRI+p.ce/2, reR=p.re/2;
-  const reCX=cx-p.spacing, reCY=cy;
-  let svg='';
+  var cx=p.w/2, cy=p.h/2, weR=p.we/2, ceGap=0.3, ceRI=weR+ceGap, ceRO=ceRI+p.ce/2;
+  var reR=p.re/2, reCX=cx-p.spacing, reCY=cy;
+  var ps=p.pad;
+  var svg='';
   dxfInit();
-  svg+=svgRect(0,0,p.w,p.h,'#f0f0f0','#ccc',0.05);
-  dxfRect(0,0,p.w,p.h,'SUBSTRATE');
-  // CE ring
+  svg+=svgRect(0,0,p.w,p.h,'#f0f0f0','#ccc',0.04);dxfRect(0,0,p.w,p.h,'SUBSTRATE');
   svg+=svgCircle(cx,cy,ceRO,'#3498db');dxfCircle(cx,cy,ceRO,'CE');
   svg+=svgCircle(cx,cy,ceRI,'#f0f0f0');dxfCircle(cx,cy,ceRI,'CE');
-  // WE
   svg+=svgCircle(cx,cy,weR,'#e74c3c');dxfCircle(cx,cy,weR,'WE');
-  // RE
   svg+=svgCircle(reCX,reCY,reR,'#27ae60');dxfCircle(reCX,reCY,reR,'RE');
-  // Pads
-  const ps=p.pad;
-  const wpx=cx+ceRO+2, wpy=cy-ps/2;
+  var wpx=cx+ceRO+2, wpy=cy-ps/2;
   svg+=svgRect(wpx,wpy,ps,ps,'#888');dxfRect(wpx,wpy,ps,ps,'PAD');
-  svg+=svgLine(cx+weR,cy,wpx,wpy+ps/2,'#888',0.08);dxfLine(cx+weR,cy,wpx,wpy+ps/2,'TRACE');
-  const cpx=cx-ps/2, cpy=cy+ceRO+2;
+  svg+=svgLine(cx+weR,cy,wpx,wpy+ps/2,'#888',0.06);dxfLine(cx+weR,cy,wpx,wpy+ps/2,'TRACE');
+  var cpx=cx-ps/2, cpy=cy+ceRO+2;
   svg+=svgRect(cpx,cpy,ps,ps,'#888');dxfRect(cpx,cpy,ps,ps,'PAD');
-  svg+=svgLine(cx,cy+ceRO,cpx+ps/2,cpy,'#888',0.08);dxfLine(cx,cy+ceRO,cpx+ps/2,cpy,'TRACE');
-  const rpx=reCX-reR-2-ps, rpy=reCY-ps/2;
+  svg+=svgLine(cx,cy+ceRO,cpx+ps/2,cpy,'#888',0.06);dxfLine(cx,cy+ceRO,cpx+ps/2,cpy,'TRACE');
+  var rpx=reCX-reR-2-ps, rpy=reCY-ps/2;
   svg+=svgRect(rpx,rpy,ps,ps,'#888');dxfRect(rpx,rpy,ps,ps,'PAD');
-  svg+=svgLine(reCX-reR,reCY,rpx+ps,rpy+ps/2,'#888',0.08);dxfLine(reCX-reR,reCY,rpx+ps,rpy+ps/2,'TRACE');
-  currentSVG=`<svg viewBox="0 0 ${p.w} ${p.h}" xmlns="http://www.w3.org/2000/svg">${svg}</svg>`;
-  return `<span class="tag dxf">DXF</span><span class="tag svg">SVG</span> WE=${p.we}mm, CE=${p.ce}mm, RE=${p.re}mm<br>CE/WE area ratio: ${(Math.PI*(p.ce/2)**2/(Math.PI*(p.we/2)**2)).toFixed(1)}:1 | Spacing: ${p.spacing}mm`;
+  svg+=svgLine(reCX-reR,reCY,rpx+ps,rpy+ps/2,'#888',0.06);dxfLine(reCX-reR,reCY,rpx+ps,rpy+ps/2,'TRACE');
+  currentSVG='<svg viewBox="0 0 '+p.w+' '+p.h+'" xmlns="http://www.w3.org/2000/svg">'+svg+'</svg>';
+  var ceArea=Math.PI*Math.pow(p.ce/2,2), weArea=Math.PI*Math.pow(p.we/2,2);
+  return '<span class="tag dxf">DXF</span><span class="tag svg">SVG</span> Three-electrode: WE='+p.we+'mm, CE='+p.ce+'mm, RE='+p.re+'mm<br>CE/WE area ratio: '+(ceArea/weArea).toFixed(1)+':1 (need ≥10:1) | Spacing: '+p.spacing+'mm';
 }
 
+// ══════════════════════════════════════════════════════════════════════
+// Serpentine
+// ══════════════════════════════════════════════════════════════════════
+
 function genSerpentine(p) {
-  const n=p.segments, sl=p.segL, sh=p.segH, tw=p.tw, ps=p.pad;
-  const totalH=n*sh, x0=(p.w-sl)/2, y0=(p.h-totalH)/2;
-  let path=[], y=y0;
-  for (let i=0;i<n;i++) {
+  var n=p.segments, sl=p.segL, sh=p.segH, tw=p.tw, ps=p.pad;
+  var totalH=n*sh, x0=(p.w-sl)/2, y0=(p.h-totalH)/2;
+  var path=[], y=y0;
+  for (var i=0;i<n;i++) {
     if (i%2===0) { path.push([x0,y]);path.push([x0+sl,y]);y+=sh;path.push([x0+sl,y]); }
     else { path.push([x0+sl,y]);path.push([x0,y]);y+=sh;path.push([x0,y]); }
   }
-  let svg='';
+  var svg='';
   dxfInit();
-  svg+=svgRect(0,0,p.w,p.h,'#f0f0f0','#ccc',0.05);dxfRect(0,0,p.w,p.h,'SUBSTRATE');
-  const px=x0-ps-1, py=y0+sh/2-ps/2;
+  svg+=svgRect(0,0,p.w,p.h,'#f0f0f0','#ccc',0.04);dxfRect(0,0,p.w,p.h,'SUBSTRATE');
+  var px=x0-ps-1, py=y0+sh/2-ps/2;
   svg+=svgRect(px,py,ps,ps,'#27ae60');dxfRect(px,py,ps,ps,'PAD');
-  svg+=svgPoly(path,'#e74c3c','#c0392b',0.05);dxfPolyline(path,'TRACE',false);
-  currentSVG=`<svg viewBox="0 0 ${p.w} ${p.h}" xmlns="http://www.w3.org/2000/svg">${svg}</svg>`;
-  return `<span class="tag dxf">DXF</span><span class="tag svg">SVG</span> Serpentine: ${n} segments, ${sl}×${sh}mm<br>Trace: ${tw}mm | L/H ratio: ${(sl/sh).toFixed(1)}:1`;
+  svg+=svgPoly(path,'#e74c3c','#c0392b',0.04);dxfPolyline(path,'TRACE',false);
+  currentSVG='<svg viewBox="0 0 '+p.w+' '+p.h+'" xmlns="http://www.w3.org/2000/svg">'+svg+'</svg>';
+  return '<span class="tag dxf">DXF</span><span class="tag svg">SVG</span> Serpentine: '+n+' segments, '+sl+'×'+sh+'mm<br>Trace: '+tw+'mm | L/H ratio: '+((sl/sh).toFixed(1))+':1';
 }
 
+// ══════════════════════════════════════════════════════════════════════
+// Ring-disk
+// ══════════════════════════════════════════════════════════════════════
+
 function genRingDisk(p) {
-  const cx=p.w/2, cy=p.h/2, diskR=p.diskD/2, rInner=diskR+p.gap, rOuter=rInner+p.ringW;
-  let svg='';
+  var cx=p.w/2, cy=p.h/2, diskR=p.diskD/2, rInner=diskR+p.gap, rOuter=rInner+p.ringW;
+  var svg='';
   dxfInit();
-  svg+=svgRect(0,0,p.w,p.h,'#f0f0f0','#ccc',0.05);dxfRect(0,0,p.w,p.h,'SUBSTRATE');
+  svg+=svgRect(0,0,p.w,p.h,'#f0f0f0','#ccc',0.04);dxfRect(0,0,p.w,p.h,'SUBSTRATE');
   svg+=svgCircle(cx,cy,rOuter,'#3498db');dxfCircle(cx,cy,rOuter,'RING');
   svg+=svgCircle(cx,cy,rInner,'#f0f0f0');dxfCircle(cx,cy,rInner,'RING');
   svg+=svgCircle(cx,cy,diskR,'#e74c3c');dxfCircle(cx,cy,diskR,'DISK');
-  const ps=p.pad;
-  const dpx=cx-rOuter-3-ps, dpy=cy-ps/2;
+  var ps=p.pad;
+  var dpx=cx-rOuter-3-ps, dpy=cy-ps/2;
   svg+=svgRect(dpx,dpy,ps,ps,'#888');dxfRect(dpx,dpy,ps,ps,'PAD');
-  svg+=svgLine(cx-diskR,cy,dpx+ps,cy,'#888',0.08);dxfLine(cx-diskR,cy,dpx+ps,cy,'TRACE');
-  const rpx=cx+rOuter+3, rpy=cy-ps/2;
+  svg+=svgLine(cx-diskR,cy,dpx+ps,cy,'#888',0.06);dxfLine(cx-diskR,cy,dpx+ps,cy,'TRACE');
+  var rpx=cx+rOuter+3, rpy=cy-ps/2;
   svg+=svgRect(rpx,rpy,ps,ps,'#888');dxfRect(rpx,rpy,ps,ps,'PAD');
-  svg+=svgLine(cx+rOuter,cy,rpx,cy,'#888',0.08);dxfLine(cx+rOuter,cy,rpx,cy,'TRACE');
-  currentSVG=`<svg viewBox="0 0 ${p.w} ${p.h}" xmlns="http://www.w3.org/2000/svg">${svg}</svg>`;
-  const N = (1 - (3*Math.PI/4)*(diskR/rOuter)**4) / (1 - (diskR/rOuter)**2);
-  return `<span class="tag dxf">DXF</span><span class="tag svg">SVG</span> Ring-Disk: disk=${p.diskD}mm, gap=${p.gap}mm, ring=${p.ringW}mm<br>Collection eff. N≈${N.toFixed(3)} | Ring Ø=${(rOuter*2).toFixed(1)}mm`;
+  svg+=svgLine(cx+rOuter,cy,rpx,cy,'#888',0.06);dxfLine(cx+rOuter,cy,rpx,cy,'TRACE');
+  currentSVG='<svg viewBox="0 0 '+p.w+' '+p.h+'" xmlns="http://www.w3.org/2000/svg">'+svg+'</svg>';
+  return '<span class="tag dxf">DXF</span><span class="tag svg">SVG</span> Ring-Disk: disk='+p.diskD+'mm, gap='+p.gap+'mm, ring='+p.ringW+'mm<br>Ring Ø='+(rOuter*2).toFixed(1)+'mm';
 }
+
+// ══════════════════════════════════════════════════════════════════════
+// Array
+// ══════════════════════════════════════════════════════════════════════
 
 function genArray(p) {
-  const {rows,cols,electrodeD:ed,pitchX:px,pitchY:py,pad:ps}=p;
-  const arrayW=(cols-1)*px, arrayH=(rows-1)*py;
-  const x0=(p.w-arrayW)/2, y0=(p.h-arrayH)/2;
-  const busY=y0-3, busX=x0-2, busW=arrayW+4, busH=1.5;
-  let svg='';
+  var rows=p.rows, cols=p.cols, ed=p.electrodeD, px=p.pitchX, py=p.pitchY, ps=p.pad;
+  var arrayW=(cols-1)*px, arrayH=(rows-1)*py;
+  var x0=(p.w-arrayW)/2, y0=(p.h-arrayH)/2;
+  var busY=y0-3, busX=x0-2, busW=arrayW+4, busH=1.5;
+  var svg='';
   dxfInit();
-  svg+=svgRect(0,0,p.w,p.h,'#f0f0f0','#ccc',0.05);dxfRect(0,0,p.w,p.h,'SUBSTRATE');
+  svg+=svgRect(0,0,p.w,p.h,'#f0f0f0','#ccc',0.04);dxfRect(0,0,p.w,p.h,'SUBSTRATE');
   svg+=svgRect(busX,busY,busW,busH,'#3498db');dxfRect(busX,busY,busW,busH,'BUS');
-  for (let r=0;r<rows;r++) for (let c=0;c<cols;c++) {
-    const ex=x0+c*px, ey=y0+r*py;
+  for (var r=0;r<rows;r++) for (var c=0;c<cols;c++) {
+    var ex=x0+c*px, ey=y0+r*py;
     svg+=svgCircle(ex,ey,ed/2,'#e74c3c');dxfCircle(ex,ey,ed/2,'ELECTRODES');
-    svg+=svgLine(ex,ey-ed/2,ex,busY+busH,'#888',0.05);dxfLine(ex,ey-ed/2,ex,busY+busH,'TRACE');
+    svg+=svgLine(ex,ey-ed/2,ex,busY+busH,'#888',0.04);dxfLine(ex,ey-ed/2,ex,busY+busH,'TRACE');
   }
-  const padX=busX-ps-1, padY=busY+(busH-ps)/2;
+  var padX=busX-ps-1, padY=busY+(busH-ps)/2;
   svg+=svgRect(padX,padY,ps,ps,'#27ae60');dxfRect(padX,padY,ps,ps,'PAD');
-  svg+=svgLine(padX+ps,padY+ps/2,busX,busY+busH/2,'#27ae60',0.08);dxfLine(padX+ps,padY+ps/2,busX,busY+busH/2,'PAD');
-  currentSVG=`<svg viewBox="0 0 ${p.w} ${p.h}" xmlns="http://www.w3.org/2000/svg">${svg}</svg>`;
-  return `<span class="tag dxf">DXF</span><span class="tag svg">SVG</span> Array: ${rows}×${cols} = ${rows*cols} electrodes<br>Ø=${ed}mm | Pitch: ${px}×${py}mm | Pitch/diameter: ${(px/ed).toFixed(1)}:1`;
+  svg+=svgLine(padX+ps,padY+ps/2,busX,busY+busH/2,'#27ae60',0.06);dxfLine(padX+ps,padY+ps/2,busX,busY+busH/2,'PAD');
+  currentSVG='<svg viewBox="0 0 '+p.w+' '+p.h+'" xmlns="http://www.w3.org/2000/svg">'+svg+'</svg>';
+  return '<span class="tag dxf">DXF</span><span class="tag svg">SVG</span> Array: '+rows+'×'+cols+' = '+(rows*cols)+' electrodes<br>Ø='+ed+'mm | Pitch: '+px+'×'+py+'mm';
 }
 
+// ══════════════════════════════════════════════════════════════════════
+// Meander
+// ══════════════════════════════════════════════════════════════════════
+
 function genMeander(p) {
-  const n=p.segments, sl=p.segL, sh=p.segH, tw=p.tw, mN=p.meanderN, mA=p.meanderAmp, ps=p.pad;
-  const totalH=n*sh, x0=(p.w-sl)/2, y0=(p.h-totalH)/2;
-  let path=[];
-  for (let i=0;i<n;i++) {
-    const sy=y0+i*sh;
+  var n=p.segments, sl=p.segL, sh=p.segH, tw=p.tw, mN=p.meanderN, mA=p.meanderAmp, ps=p.pad;
+  var totalH=n*sh, x0=(p.w-sl)/2, y0=(p.h-totalH)/2;
+  var path=[];
+  for (var i=0;i<n;i++) {
+    var sy=y0+i*sh;
     if (i%2===0) {
-      for (let j=0;j<=mN*4;j++) {
-        const t=j/(mN*4);
+      for (var j=0;j<=mN*4;j++) {
+        var t=j/(mN*4);
         path.push([x0+t*sl, sy+sh/2+Math.sin(t*mN*2*Math.PI)*mA]);
       }
     } else {
-      for (let j=0;j<=mN*4;j++) {
-        const t=j/(mN*4);
-        path.push([x0+sl-t*sl, sy+sh/2+Math.sin(t*mN*2*Math.PI)*mA]);
+      for (var j2=0;j2<=mN*4;j2++) {
+        var t2=j2/(mN*4);
+        path.push([x0+sl-t2*sl, sy+sh/2+Math.sin(t2*mN*2*Math.PI)*mA]);
       }
     }
   }
-  let svg='';
+  var svg='';
   dxfInit();
-  svg+=svgRect(0,0,p.w,p.h,'#f0f0f0','#ccc',0.05);dxfRect(0,0,p.w,p.h,'SUBSTRATE');
-  const px=x0-ps-1, py2=y0+sh/2-ps/2;
-  svg+=svgRect(px,py2,ps,ps,'#27ae60');dxfRect(px,py2,ps,ps,'PAD');
-  svg+=svgPoly(path.map((p,i)=>[p[0],p[1]]).concat([path[0]]),'none','#e74c3c',0.08);
+  svg+=svgRect(0,0,p.w,p.h,'#f0f0f0','#ccc',0.04);dxfRect(0,0,p.w,p.h,'SUBSTRATE');
+  var px2=x0-ps-1, py2=y0+sh/2-ps/2;
+  svg+=svgRect(px2,py2,ps,ps,'#27ae60');dxfRect(px2,py2,ps,ps,'PAD');
+  svg+=svgPoly(path.map(function(pt){return[pt[0],pt[1]]}).concat([path[0]]),'none','#e74c3c',0.06);
   dxfPolyline(path,'TRACE',false);
-  currentSVG=`<svg viewBox="0 0 ${p.w} ${p.h}" xmlns="http://www.w3.org/2000/svg">${svg}</svg>`;
-  return `<span class="tag dxf">DXF</span><span class="tag svg">SVG</span> Meander: ${n} segments, ${mN} waves/seg<br>Amplitude: ${mA}mm | Segment: ${sl}×${sh}mm | L/H: ${(sl/sh).toFixed(1)}:1`;
+  currentSVG='<svg viewBox="0 0 '+p.w+' '+p.h+'" xmlns="http://www.w3.org/2000/svg">'+svg+'</svg>';
+  return '<span class="tag dxf">DXF</span><span class="tag svg">SVG</span> Meander: '+n+' segments, '+mN+' waves/seg<br>Amplitude: '+mA+'mm | L/H: '+((sl/sh).toFixed(1))+':1';
 }
+
+// ══════════════════════════════════════════════════════════════════════
+// Circular array
+// ══════════════════════════════════════════════════════════════════════
 
 function genCArray(p) {
-  const cx=p.w/2, cy=p.h/2, ps=p.pad;
-  let svg='';
+  var cx=p.w/2, cy=p.h/2, ps=p.pad;
+  var svg='';
   dxfInit();
-  svg+=svgRect(0,0,p.w,p.h,'#f0f0f0','#ccc',0.05);dxfRect(0,0,p.w,p.h,'SUBSTRATE');
-  // Centre electrode
+  svg+=svgRect(0,0,p.w,p.h,'#f0f0f0','#ccc',0.04);dxfRect(0,0,p.w,p.h,'SUBSTRATE');
   svg+=svgCircle(cx,cy,p.electrodeD/2,'#3498db');dxfCircle(cx,cy,p.electrodeD/2,'CENTRE');
-  for (let r=1;r<=p.rings;r++) {
-    const ringR=r*p.ringSpacing;
-    for (let e=0;e<p.epr;e++) {
-      const a=2*Math.PI*e/p.epr;
-      const ex=cx+ringR*Math.cos(a), ey=cy+ringR*Math.sin(a);
+  for (var r=1;r<=p.rings;r++) {
+    var ringR=r*p.ringSpacing;
+    for (var e=0;e<p.epr;e++) {
+      var a=2*Math.PI*e/p.epr;
+      var ex=cx+ringR*Math.cos(a), ey=cy+ringR*Math.sin(a);
       svg+=svgCircle(ex,ey,p.electrodeD/2,'#e74c3c');dxfCircle(ex,ey,p.electrodeD/2,'ELECTRODES');
-      svg+=svgLine(ex,ey,cx,cy,'#888',0.03);dxfLine(ex,ey,cx,cy,'TRACE');
+      svg+=svgLine(ex,ey,cx,cy,'#888',0.02);dxfLine(ex,ey,cx,cy,'TRACE');
     }
   }
-  // Pad
   svg+=svgRect(0,cy-ps/2,ps,ps,'#27ae60');dxfRect(0,cy-ps/2,ps,ps,'PAD');
-  svg+=svgLine(ps,cy,cx-p.electrodeD/2,cy,'#27ae60',0.08);dxfLine(ps,cy,cx-p.electrodeD/2,cy,'TRACE');
-  currentSVG=`<svg viewBox="0 0 ${p.w} ${p.h}" xmlns="http://www.w3.org/2000/svg">${svg}</svg>`;
-  return `<span class="tag dxf">DXF</span><span class="tag svg">SVG</span> Circular Array: ${p.rings} rings × ${p.epr} electrodes<br>Ø=${p.electrodeD}mm | Spacing: ${p.ringSpacing}mm | Total: ${p.rings*p.epr+1} electrodes`;
+  svg+=svgLine(ps,cy,cx-p.electrodeD/2,cy,'#27ae60',0.06);dxfLine(ps,cy,cx-p.electrodeD/2,cy,'TRACE');
+  currentSVG='<svg viewBox="0 0 '+p.w+' '+p.h+'" xmlns="http://www.w3.org/2000/svg">'+svg+'</svg>';
+  return '<span class="tag dxf">DXF</span><span class="tag svg">SVG</span> Circular Array: '+p.rings+' rings × '+p.epr+' electrodes<br>Ø='+p.electrodeD+'mm | Spacing: '+p.ringSpacing+'mm';
 }
+
+// ══════════════════════════════════════════════════════════════════════
+// Spiral
+// ══════════════════════════════════════════════════════════════════════
 
 function genSpiral(p) {
-  const cx=p.w/2, cy=p.h/2, ps=p.pad, nPts=200;
-  let path=[];
-  for (let i=0;i<=nPts;i++) {
-    const t=i/nPts, a=t*p.turns*2*Math.PI;
-    const r=p.rStart+t*(p.rEnd-p.rStart);
+  var cx=p.w/2, cy=p.h/2, ps=p.pad, nPts=200;
+  var path=[];
+  for (var i=0;i<=nPts;i++) {
+    var t=i/nPts, a=t*p.turns*2*Math.PI;
+    var r=p.rStart+t*(p.rEnd-p.rStart);
     path.push([cx+r*Math.cos(a), cy+r*Math.sin(a)]);
   }
-  let svg='';
+  var svg='';
   dxfInit();
-  svg+=svgRect(0,0,p.w,p.h,'#f0f0f0','#ccc',0.05);dxfRect(0,0,p.w,p.h,'SUBSTRATE');
-  svg+=svgPoly(path,'none','#e74c3c',0.08);dxfPolyline(path,'SPIRAL',false);
-  // Pad at center
+  svg+=svgRect(0,0,p.w,p.h,'#f0f0f0','#ccc',0.04);dxfRect(0,0,p.w,p.h,'SUBSTRATE');
+  svg+=svgPoly(path,'none','#e74c3c',0.06);dxfPolyline(path,'SPIRAL',false);
   svg+=svgRect(cx-ps/2,cy-ps/2,ps,ps,'#27ae60');dxfRect(cx-ps/2,cy-ps/2,ps,ps,'PAD');
-  // Outer pad
   svg+=svgRect(cx+p.rEnd+2,cy-ps/2,ps,ps,'#27ae60');dxfRect(cx+p.rEnd+2,cy-ps/2,ps,ps,'PAD');
-  svg+=svgLine(cx+p.rEnd*Math.cos(0),cy+p.rEnd*Math.sin(0),cx+p.rEnd+2,cy,'#888',0.08);
-  dxfLine(cx+p.rEnd,cy,cx+p.rEnd+2,cy,'TRACE');
-  currentSVG=`<svg viewBox="0 0 ${p.w} ${p.h}" xmlns="http://www.w3.org/2000/svg">${svg}</svg>`;
-  return `<span class="tag dxf">DXF</span><span class="tag svg">SVG</span> Spiral: ${p.turns} turns, r=${p.rStart}–${p.rEnd}mm<br>Trace: ${p.tw}mm | Turn spacing: ${((p.rEnd-p.rStart)/p.turns).toFixed(2)}mm`;
+  svg+=svgLine(cx+p.rEnd,cy,cx+p.rEnd+2,cy,'#888',0.06);dxfLine(cx+p.rEnd,cy,cx+p.rEnd+2,cy,'TRACE');
+  currentSVG='<svg viewBox="0 0 '+p.w+' '+p.h+'" xmlns="http://www.w3.org/2000/svg">'+svg+'</svg>';
+  return '<span class="tag dxf">DXF</span><span class="tag svg">SVG</span> Spiral: '+p.turns+' turns, r='+p.rStart+'–'+p.rEnd+'mm<br>Trace: '+p.tw+'mm | Turn spacing: '+((p.rEnd-p.rStart)/p.turns).toFixed(2)+'mm';
 }
 
-function genIDEVariants(p) {
-  const gaps = p.gaps.split(',').map(Number).filter(g=>g>0);
-  const ratio = p.ratio || 0.5;
-  const fl = p.fl || 6;
-  const bw = p.bus || 2;
-  const ps = p.pad || 3;
-  const overlapW = 20, overlapH = 10;
-  const subW = p.w || 25, subH = p.h || 20;
+// ══════════════════════════════════════════════════════════════════════
+// Main generate/preview/download
+// ══════════════════════════════════════════════════════════════════════
 
-  // Generate all 5 variants in a horizontal strip
-  const totalW = gaps.length * (subW + 5) - 5;
-  let svg = '';
-  dxfInit();
-
-  let info = '<span class="tag dxf">DXF</span><span class="tag svg">SVG</span> <strong>5 IDE Variants</strong><br>';
-
-  for (let gi=0; gi<gaps.length; gi++) {
-    const gap = gaps[gi];
-    const fw = gap; // ratio = fw/(fw+gap) = 0.5 → fw = gap
-    const pitch = fw + gap;
-    const met = fw / pitch;
-    const nFingers = Math.floor(overlapW / pitch);
-    const actualW = nFingers * pitch;
-    const ox = gi * (subW + 5); // offset X for each variant
-
-    const x0 = ox + (subW - actualW) / 2;
-    const busTopY = 2 + fl + bw;
-    const busBotY = 2;
-
-    // Substrate
-    svg += svgRect(ox, 0, subW, subH, '#f0f0f0', '#ccc', 0.05);
-
-    // Bus A
-    const baX = x0 - 1, baW = actualW + 2;
-    svg += svgRect(baX, busTopY, baW, bw, '#e74c3c');
-
-    // Bus B
-    svg += svgRect(x0 - 1, busBotY - bw, actualW + 2, bw, '#3498db');
-
-    // Fingers
-    for (let i = 0; i < nFingers; i++) {
-      const fx = x0 + i * pitch;
-      if (i % 2 === 0) {
-        svg += svgRect(fx, busTopY - fl, fw, fl, '#e74c3c');
-        dxfRect(fx, busTopY - fl, fw, fl, 'ELECTRODE_A');
-      } else {
-        svg += svgRect(fx, busBotY, fw, fl, '#3498db');
-        dxfRect(fx, busBotY, fw, fl, 'ELECTRODE_B');
-      }
-    }
-
-    // Pads
-    const paX = baX - ps - 1, paY = busTopY + (bw - ps) / 2;
-    svg += svgRect(paX, paY, ps, ps, '#27ae60');
-    svg += svgLine(paX + ps, paY + ps / 2, baX, busTopY + bw / 2, '#27ae60', 0.05);
-    const pbX = baX + baW + 1, pbY = busBotY - bw + (bw - ps) / 2;
-    svg += svgRect(pbX, pbY, ps, ps, '#27ae60');
-    svg += svgLine(pbX, pbY + ps / 2, baX + baW, busBotY - bw / 2, '#27ae60', 0.05);
-
-    // DXF entities
-    dxfRect(ox, 0, subW, subH, 'SUBSTRATE');
-    dxfRect(baX, busTopY, baW, bw, 'ELECTRODE_A');
-    dxfRect(x0 - 1, busBotY - bw, actualW + 2, bw, 'ELECTRODE_B');
-    dxfRect(paX, paY, ps, ps, 'PAD');
-    dxfLine(paX + ps, paY + ps / 2, baX, busTopY + bw / 2, 'PAD');
-    dxfRect(pbX, pbY, ps, ps, 'PAD');
-    dxfLine(pbX, pbY + ps / 2, baX + baW, busBotY - bw / 2, 'PAD');
-
-    info += `Gap=${gap}mm FW=${fw}mm Pitch=${pitch}mm Met=${met.toFixed(2)} #${nFingers}<br>`;
-  }
-
-  currentSVG = `<svg viewBox="-1 -1 ${totalW + 2} ${subH + 2}" xmlns="http://www.w3.org/2000/svg">${svg}</svg>`;
-  return info;
-}
-
-// ── Main generate function ──
 function generate() {
-  const p = getParams();
+  var p = getParams();
   switch (currentType) {
     case 'ide': return genIDE(p);
     case 'three': return genThree(p);
@@ -784,40 +752,32 @@ function generate() {
     case 'meander': return genMeander(p);
     case 'carray': return genCArray(p);
     case 'spiral': return genSpiral(p);
-    case 'ide_variants': return genIDEVariants(p);
     default: return 'Unknown type';
   }
 }
 
-// ── Preview ──
 function preview() {
-  const info = generate();
+  var info = generate();
   document.getElementById('preview-container').innerHTML = currentSVG;
   document.getElementById('preview-info').innerHTML = info;
 }
 
-// ── Download DXF ──
 function downloadDXF() {
-  generate(); // ensure DXF is built
-  const dxfContent = dxfBuild();
-  const blob = new Blob([dxfContent], {type: 'application/dxf'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `electrodeforge_${currentType}.dxf`;
-  a.click();
+  generate();
+  var dxfContent = dxfBuild();
+  var blob = new Blob([dxfContent], {type: 'application/dxf'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url; a.download = 'electrodeforge_'+currentType+'.dxf'; a.click();
   URL.revokeObjectURL(url);
 }
 
-// ── Download SVG ──
 function downloadSVG() {
   generate();
-  const blob = new Blob([currentSVG], {type: 'image/svg+xml'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `electrodeforge_${currentType}.svg`;
-  a.click();
+  var blob = new Blob([currentSVG], {type: 'image/svg+xml'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url; a.download = 'electrodeforge_'+currentType+'.svg'; a.click();
   URL.revokeObjectURL(url);
 }
 
