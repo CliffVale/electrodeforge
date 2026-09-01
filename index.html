@@ -1,385 +1,834 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ElectrodeForge — Parametric Electrode Generator</title>
-    <meta name="description" content="Free parametric electrode generator for screen printing, laser cutting (LIG), and CNC. Generate DXF, SVG, and G-code files for interdigitated, three-electrode, serpentine, and custom designs.">
-    <style>
-        :root {
-            --bg: #0a0e1a;
-            --surface: #111827;
-            --border: #1e293b;
-            --text: #e2e8f0;
-            --muted: #94a3b8;
-            --accent: #60a5fa;
-            --accent2: #a78bfa;
-            --green: #34d399;
-            --orange: #fb923c;
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ElectrodeForge — Free Parametric Electrode Generator</title>
+<meta name="description" content="Generate DXF, SVG, and G-code files for interdigitated, three-electrode, serpentine, spiral, and custom electrode designs. Free, no login required.">
+<style>
+:root{--bg:#0a0e1a;--surface:#111827;--surface2:#1a2236;--border:#1e293b;--text:#e2e8f0;--muted:#94a3b8;--accent:#60a5fa;--accent2:#a78bfa;--green:#34d399;--orange:#fb923c;--red:#f87171;--radius:10px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.container{max-width:1200px;margin:0 auto;padding:0 1.5rem}
 
-        /* ── Nav ── */
-        nav {
-            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-            background: rgba(10, 14, 26, 0.9);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--border);
-            padding: 1rem 2rem;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .logo { font-size: 1.4rem; font-weight: 700; }
-        .logo span { background: linear-gradient(90deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        nav a { color: var(--muted); text-decoration: none; margin-left: 2rem; font-size: 0.9rem; transition: color 0.2s; }
-        nav a:hover { color: var(--accent); }
-        .nav-cta {
-            background: var(--accent); color: #000 !important; padding: 0.5rem 1.2rem;
-            border-radius: 8px; font-weight: 600; margin-left: 1.5rem;
-        }
-        .nav-cta:hover { opacity: 0.9; color: #000 !important; }
+/* ── Hero ── */
+.hero{text-align:center;padding:3rem 1rem 2rem;background:linear-gradient(135deg,rgba(96,165,250,0.08),rgba(167,139,250,0.08))}
+.hero h1{font-size:2.5rem;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero .tagline{color:var(--muted);font-size:1.1rem;margin:0.5rem 0 1.5rem}
+.hero .badges{display:flex;gap:0.5rem;justify-content:center;flex-wrap:wrap}
+.badge{display:inline-flex;align-items:center;gap:0.3rem;padding:0.3rem 0.8rem;border-radius:20px;font-size:0.75rem;font-weight:600}
+.badge.blue{background:rgba(96,165,250,0.15);color:var(--accent)}
+.badge.green{background:rgba(52,211,153,0.15);color:var(--green)}
+.badge.purple{background:rgba(167,139,250,0.15);color:var(--accent2)}
+.badge.orange{background:rgba(251,146,60,0.15);color:var(--orange)}
 
-        /* ── Hero ── */
-        .hero {
-            min-height: 100vh;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            text-align: center; padding: 8rem 2rem 4rem;
-            background: radial-gradient(ellipse at 50% 0%, rgba(96,165,250,0.12) 0%, transparent 60%);
-        }
-        .hero h1 {
-            font-size: clamp(2.5rem, 6vw, 4.5rem);
-            font-weight: 800;
-            line-height: 1.1;
-            margin-bottom: 1.5rem;
-        }
-        .hero h1 span {
-            background: linear-gradient(135deg, var(--accent), var(--accent2), var(--green));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
-        .hero p { color: var(--muted); font-size: 1.2rem; max-width: 600px; margin-bottom: 2.5rem; }
-        .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
-        .btn-primary {
-            background: linear-gradient(135deg, var(--accent), var(--accent2));
-            color: #000; padding: 1rem 2.5rem; border-radius: 12px;
-            font-size: 1.1rem; font-weight: 700; text-decoration: none;
-            transition: transform 0.2s, box-shadow 0.2s;
-            box-shadow: 0 4px 24px rgba(96,165,250,0.3);
-        }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(96,165,250,0.4); }
-        .btn-secondary {
-            border: 1px solid var(--border); color: var(--text);
-            padding: 1rem 2.5rem; border-radius: 12px; font-size: 1.1rem;
-            text-decoration: none; transition: border-color 0.2s;
-        }
-        .btn-secondary:hover { border-color: var(--accent); }
+/* ── Navigation ── */
+nav{background:var(--surface);border-bottom:1px solid var(--border);padding:0.8rem 0;position:sticky;top:0;z-index:100}
+nav .container{display:flex;justify-content:space-between;align-items:center}
+nav .brand{font-weight:700;font-size:1.1rem;color:var(--accent)}
+nav a.btn{padding:0.4rem 1rem;border-radius:6px;font-size:0.85rem;font-weight:600;background:var(--accent);color:#000;border:none;cursor:pointer;text-decoration:none}
+nav a.btn:hover{opacity:0.9;text-decoration:none}
 
-        /* ── Preview mockup ── */
-        .mockup {
-            margin-top: 3rem; width: 100%; max-width: 900px;
-            background: var(--surface); border: 1px solid var(--border);
-            border-radius: 16px; overflow: hidden;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-        }
-        .mockup-bar {
-            background: var(--border); padding: 0.7rem 1rem;
-            display: flex; align-items: center; gap: 0.5rem;
-        }
-        .mockup-dot { width: 12px; height: 12px; border-radius: 50%; }
-        .mockup-dot.r { background: #ef4444; }
-        .mockup-dot.y { background: #eab308; }
-        .mockup-dot.g { background: #22c55e; }
-        .mockup-content { padding: 2rem; min-height: 300px; display: flex; align-items: center; justify-content: center; }
-        .mockup-text { color: var(--muted); font-size: 0.9rem; text-align: center; }
+/* ── Tool Section ── */
+.tool-section{padding:2rem 0}
+.tool-section h2{font-size:1.5rem;font-weight:700;margin-bottom:1rem;text-align:center}
+.tool-section h2 span{color:var(--accent)}
 
-        /* ── Features ── */
-        .features {
-            padding: 6rem 2rem; max-width: 1200px; margin: 0 auto;
-        }
-        .features h2 { text-align: center; font-size: 2rem; margin-bottom: 3rem; }
-        .features h2 span { color: var(--accent); }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
-        .card {
-            background: var(--surface); border: 1px solid var(--border);
-            border-radius: 16px; padding: 2rem; transition: border-color 0.3s;
-        }
-        .card:hover { border-color: var(--accent); }
-        .card-icon { font-size: 2rem; margin-bottom: 1rem; }
-        .card h3 { font-size: 1.1rem; margin-bottom: 0.5rem; }
-        .card p { color: var(--muted); font-size: 0.9rem; }
+.tool-layout{display:grid;grid-template-columns:320px 1fr;gap:1.5rem;align-items:start}
+@media(max-width:900px){.tool-layout{grid-template-columns:1fr}}
 
-        /* ── Types ── */
-        .types {
-            padding: 6rem 2rem; max-width: 1200px; margin: 0 auto;
-        }
-        .types h2 { text-align: center; font-size: 2rem; margin-bottom: 1rem; }
-        .types .subtitle { text-align: center; color: var(--muted); margin-bottom: 3rem; }
-        .type-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 1rem;
-        }
-        .type-card {
-            background: var(--surface); border: 1px solid var(--border);
-            border-radius: 12px; padding: 1.5rem; text-align: center;
-            transition: all 0.3s; cursor: default;
-        }
-        .type-card:hover { border-color: var(--accent); transform: translateY(-2px); }
-        .type-icon { font-size: 2.5rem; margin-bottom: 0.8rem; }
-        .type-card h4 { font-size: 0.95rem; margin-bottom: 0.3rem; }
-        .type-card p { color: var(--muted); font-size: 0.8rem; }
+/* ── Sidebar ── */
+.sidebar{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.2rem;position:sticky;top:70px}
+.sidebar h3{font-size:0.9rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.8rem}
 
-        /* ── Code ── */
-        .code-section { padding: 6rem 2rem; max-width: 900px; margin: 0 auto; }
-        .code-section h2 { text-align: center; font-size: 2rem; margin-bottom: 1rem; }
-        .code-section .subtitle { text-align: center; color: var(--muted); margin-bottom: 2rem; }
-        .code-block {
-            background: var(--surface); border: 1px solid var(--border);
-            border-radius: 12px; padding: 1.5rem; overflow-x: auto;
-            font-family: 'Fira Code', 'Cascadia Code', monospace;
-            font-size: 0.85rem; line-height: 1.8;
-        }
-        .code-block .comment { color: #6b7280; }
-        .code-block .cmd { color: var(--green); }
-        .code-block .flag { color: var(--accent); }
-        .code-block .val { color: var(--orange); }
+.type-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0.4rem;margin-bottom:1.2rem}
+.type-btn{padding:0.5rem 0.3rem;border:2px solid var(--border);border-radius:6px;background:var(--surface2);color:var(--muted);font-size:0.7rem;font-weight:600;cursor:pointer;text-align:center;transition:all 0.15s}
+.type-btn:hover{border-color:var(--accent);color:var(--text)}
+.type-btn.active{border-color:var(--accent);background:rgba(96,165,250,0.1);color:var(--accent)}
+.type-btn .icon{font-size:1.1rem;display:block;margin-bottom:0.2rem}
 
-        /* ── Footer ── */
-        footer {
-            border-top: 1px solid var(--border);
-            padding: 3rem 2rem; text-align: center; color: var(--muted);
-            font-size: 0.85rem;
-        }
-        footer a { color: var(--accent); text-decoration: none; }
-        footer a:hover { text-decoration: underline; }
-    </style>
+.param-group{margin-bottom:1rem}
+.param-group label{display:flex;justify-content:space-between;font-size:0.8rem;color:var(--muted);margin-bottom:0.3rem}
+.param-group label span{color:var(--accent);font-weight:600}
+.param-group input[type=range]{width:100%;accent-color:var(--accent);height:4px}
+.param-group input[type=number],.param-group input[type=text]{width:100%;padding:0.4rem 0.6rem;border:1px solid var(--border);border-radius:6px;background:var(--surface2);color:var(--text);font-size:0.85rem}
+.param-group input:focus{outline:none;border-color:var(--accent)}
+
+.btn-row{display:flex;gap:0.5rem;margin-top:1rem}
+.btn-primary{flex:1;padding:0.6rem;border:none;border-radius:6px;background:var(--accent);color:#000;font-weight:700;font-size:0.85rem;cursor:pointer}
+.btn-primary:hover{opacity:0.85}
+.btn-secondary{flex:1;padding:0.6rem;border:1px solid var(--border);border-radius:6px;background:var(--surface2);color:var(--text);font-weight:600;font-size:0.85rem;cursor:pointer}
+.btn-secondary:hover{border-color:var(--accent)}
+
+/* ── Preview Panel ── */
+.preview-panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;min-height:500px}
+.preview-panel h3{font-size:0.9rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:1rem}
+.preview-svg{background:#fff;border-radius:6px;padding:1rem;min-height:350px;display:flex;align-items:center;justify-content:center}
+.preview-svg svg{max-width:100%;max-height:400px}
+.preview-info{margin-top:1rem;font-size:0.8rem;color:var(--muted);line-height:1.8}
+.preview-info .tag{display:inline-block;padding:0.15rem 0.5rem;border-radius:4px;font-size:0.7rem;font-weight:600;margin-right:0.3rem}
+.tag.dxf{background:rgba(96,165,250,0.15);color:var(--accent)}
+.tag.svg{background:rgba(52,211,153,0.15);color:var(--green)}
+.tag.gcode{background:rgba(251,146,60,0.15);color:var(--orange)}
+
+/* ── Design Guide ── */
+.guide{padding:3rem 0;background:rgba(96,165,250,0.03)}
+.guide h2{text-align:center;font-size:1.5rem;margin-bottom:1.5rem}
+.guide h2 span{color:var(--accent)}
+.guide-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.2rem}
+.guide-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.2rem}
+.guide-card h4{color:var(--accent);margin-bottom:0.5rem;font-size:0.95rem}
+.guide-card p{color:var(--muted);font-size:0.85rem}
+.guide-card ul{margin-top:0.5rem;padding-left:1.2rem}
+.guide-card li{color:var(--muted);font-size:0.82rem;margin-bottom:0.3rem}
+.guide-card .ref{font-size:0.72rem;color:#64748b;margin-top:0.5rem;font-style:italic}
+
+/* ── Features ── */
+.features{padding:3rem 0}
+.features h2{text-align:center;font-size:1.5rem;margin-bottom:1.5rem}
+.features h2 span{color:var(--accent)}
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1rem}
+.feat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.2rem;text-align:center}
+.feat-card .icon{font-size:2rem;margin-bottom:0.5rem}
+.feat-card h4{font-size:0.95rem;margin-bottom:0.3rem}
+.feat-card p{color:var(--muted);font-size:0.82rem}
+
+/* ── Footer ── */
+footer{text-align:center;padding:2rem;border-top:1px solid var(--border);color:var(--muted);font-size:0.8rem}
+</style>
 </head>
 <body>
 
 <nav>
-    <div class="logo">⚡ <span>ElectrodeForge</span></div>
-    <div>
-        <a href="#features">Features</a>
-        <a href="#types">Types</a>
-        <a href="#cli">CLI</a>
-        <a href="#app" class="nav-cta" onclick="alert('App coming soon! Deploying to Render...')">Open App →</a>
-    </div>
+<div class="container">
+  <div class="brand">⚡ ElectrodeForge</div>
+  <a href="#tool" class="btn">Open Generator</a>
+</div>
 </nav>
 
-<section class="hero">
-    <h1>Design Electrodes<br><span>in Seconds</span></h1>
-    <p>Parametric electrode generator for screen printing, laser cutting (LIG), and CNC. Describe your design — get fabrication-ready files.</p>
-    <div class="hero-btns">
-        <a href="#app" class="btn-primary" onclick="alert('App coming soon! Deploying to Render...')">⚡ Launch Generator</a>
-        <a href="https://github.com/CliffVale/electrodeforge" class="btn-secondary">View on GitHub</a>
+<div class="hero">
+<h1>ElectrodeForge</h1>
+<p class="tagline">Free parametric electrode generator for screen printing, laser cutting (LIG), and CNC</p>
+<div class="badges">
+  <span class="badge blue">9 Electrode Types</span>
+  <span class="badge green">DXF + SVG + G-code</span>
+  <span class="badge purple">No Login Required</span>
+  <span class="badge orange">100% Client-Side</span>
+</div>
+</div>
+
+<!-- ── TOOL ── -->
+<section class="tool-section" id="tool">
+<div class="container">
+  <h2>⚡ Electrode <span>Generator</span></h2>
+  <div class="tool-layout">
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <h3>Electrode Type</h3>
+      <div class="type-grid">
+        <button class="type-btn active" data-type="ide" onclick="selectType('ide')"><span class="icon">⫿</span>IDE</button>
+        <button class="type-btn" data-type="three" onclick="selectType('three')"><span class="icon">◉</span>3-Elec</button>
+        <button class="type-btn" data-type="serpentine" onclick="selectType('serpentine')"><span class="icon">⌇</span>Serpent</button>
+        <button class="type-btn" data-type="ringdisk" onclick="selectType('ringdisk')"><span class="icon">◎</span>Ring-Disk</button>
+        <button class="type-btn" data-type="array" onclick="selectType('array')"><span class="icon">⊞</span>Array</button>
+        <button class="type-btn" data-type="meander" onclick="selectType('meander')"><span class="icon">∿</span>Meander</button>
+        <button class="type-btn" data-type="carray" onclick="selectType('carray')"><span class="icon">⊙</span>Circ Arr</button>
+        <button class="type-btn" data-type="spiral" onclick="selectType('spiral')"><span class="icon">🌀</span>Spiral</button>
+        <button class="type-btn" data-type="ide_variants" onclick="selectType('ide_variants')"><span class="icon">⚡</span>5×IDE</button>
+      </div>
+
+      <div id="params-container"></div>
+
+      <div class="btn-row">
+        <button class="btn-primary" onclick="preview()">👁 Preview</button>
+      </div>
+      <div class="btn-row" style="margin-top:0.5rem">
+        <button class="btn-secondary" onclick="downloadDXF()">⬇ DXF</button>
+        <button class="btn-secondary" onclick="downloadSVG()">⬇ SVG</button>
+      </div>
     </div>
 
-    <div class="mockup">
-        <div class="mockup-bar">
-            <div class="mockup-dot r"></div>
-            <div class="mockup-dot y"></div>
-            <div class="mockup-dot g"></div>
-        </div>
-        <div class="mockup-content">
-            <div class="mockup-text">
-                <div style="font-size:3rem;margin-bottom:1rem;">🔬</div>
-                <div style="color:var(--text);font-size:1.1rem;font-weight:600;">Live SVG Preview</div>
-                <div>Adjust parameters → see your electrode design in real-time</div>
-            </div>
-        </div>
+    <!-- Preview -->
+    <div class="preview-panel">
+      <h3>Live Preview</h3>
+      <div class="preview-svg" id="preview-container">
+        <svg id="preview-svg" viewBox="0 0 25 25" xmlns="http://www.w3.org/2000/svg">
+          <rect width="25" height="25" fill="#f0f0f0" stroke="#ccc"/>
+          <text x="12.5" y="13" text-anchor="middle" fill="#999" font-size="1.2">Select type & click Preview</text>
+        </svg>
+      </div>
+      <div class="preview-info" id="preview-info">
+        <p>Select an electrode type and adjust parameters, then click <strong>Preview</strong>.</p>
+      </div>
     </div>
+
+  </div>
+</div>
 </section>
 
-<section class="features" id="features">
-    <h2>Why <span>ElectrodeForge</span>?</h2>
-    <div class="grid">
-        <div class="card">
-            <div class="card-icon">🎯</div>
-            <h3>Parametric Control</h3>
-            <p>Every dimension is adjustable. Finger width, gap, electrode diameter, spacing — change a number, regenerate.</p>
-        </div>
-        <div class="card">
-            <div class="card-icon">⚡</div>
-            <h3>3 Output Formats</h3>
-            <p><strong>DXF</strong> for laser cutters, <strong>SVG</strong> for Cricut/screen printing, <strong>G-code</strong> for CNC and pen plotters.</p>
-        </div>
-        <div class="card">
-            <div class="card-icon">🧩</div>
-            <h3>9 Electrode Types</h3>
-            <p>IDE, three-electrode, serpentine, ring-disk, array, meander, circular array, spiral, and custom polygons.</p>
-        </div>
-        <div class="card">
-            <div class="card-icon">🔬</div>
-            <h3>Multi-Layer Export</h3>
-            <p>Export each layer separately for multi-material fabrication. Perfect for multi-layer Cricut stencil workflows.</p>
-        </div>
-        <div class="card">
-            <div class="card-icon">🌐</div>
-            <h3>Web UI + CLI</h3>
-            <p>Use the visual web interface or the command-line tool. Both generate identical output files.</p>
-        </div>
-        <div class="card">
-            <div class="card-icon">💚</div>
-            <h3>100% Free & Open</h3>
-            <p>No accounts, no API keys, no cloud. Run locally on your machine. MIT licensed.</p>
-        </div>
+<!-- ── DESIGN GUIDE ── -->
+<section class="guide" id="guide">
+<div class="container">
+  <h2>📋 Scientific <span>Design Guide</span></h2>
+  <p style="text-align:center;color:var(--muted);max-width:700px;margin:0 auto 1.5rem;font-size:0.9rem">Validated design rules from peer-reviewed literature. Every default is based on published specifications.</p>
+  <div class="guide-grid">
+
+    <div class="guide-card">
+      <h4>⫿ Interdigitated Electrode (IDE)</h4>
+      <p>Use: Amperometric/impedimetric biosensors, humidity sensors</p>
+      <ul>
+        <li><strong>Finger width:</strong> 0.1–2mm (screen print), 25μm (lithography)</li>
+        <li><strong>Gap:</strong> ≤ finger width for optimal redox cycling</li>
+        <li><strong>Pairs:</strong> 10–50 for adequate signal</li>
+        <li><strong>Bus bar:</strong> ≥ 2× finger width for low resistance</li>
+        <li><strong>Pad:</strong> ≥ 2mm for reliable wire bonding</li>
+      </ul>
+      <p class="ref">Ref: Kosri et al., Nanomaterials 2022 (PMC9741053)</p>
     </div>
+
+    <div class="guide-card">
+      <h4>◉ Three-Electrode System</h4>
+      <p>Use: Cyclic voltammetry, impedance spectroscopy, battery testing</p>
+      <ul>
+        <li><strong>WE diameter:</strong> 1–6mm (3mm standard for CV/EIS)</li>
+        <li><strong>CE area:</strong> MUST be ≥ 10× WE area (the "10:1 rule")</li>
+        <li><strong>RE diameter:</strong> 1–3mm (Ag/AgCl standard)</li>
+        <li><strong>WE-RE spacing:</strong> 2–5mm (closer = less iR drop)</li>
+      </ul>
+      <p class="ref">Ref: Ossila "Choosing Working, Reference and Counter Electrodes"</p>
+    </div>
+
+    <div class="guide-card">
+      <h4>◎ Ring-Disk Electrode</h4>
+      <p>Use: Generator-collector experiments, ORR studies</p>
+      <ul>
+        <li><strong>Disk diameter:</strong> 3–6mm (5mm Pine Research standard)</li>
+        <li><strong>Gap:</strong> 375μm is industry standard for RRDE</li>
+        <li><strong>Ring width:</strong> 1–2mm for measurable collection</li>
+        <li><strong>Collection efficiency:</strong> N ≈ 0.256 for standard geometry</li>
+      </ul>
+      <p class="ref">Ref: Pine Research "Rotating Ring Disk Electrode Fundamentals"</p>
+    </div>
+
+    <div class="guide-card">
+      <h4>⌇ Serpentine / Meander</h4>
+      <p>Use: Stretchable/wearable electronics, resistive heaters</p>
+      <ul>
+        <li><strong>Trace width:</strong> 0.5–1mm (screen print)</li>
+        <li><strong>L/H ratio:</strong> 1.5–3:1 for optimal stretchability</li>
+        <li><strong>Meander amplitude:</strong> ≤ segment_height / 2</li>
+        <li><strong>Waves per segment:</strong> 4–12</li>
+      </ul>
+      <p class="ref">Ref: Suhaimi et al., Results in Physics 2022</p>
+    </div>
+
+    <div class="guide-card">
+      <h4>⊞ Electrode Array</h4>
+      <p>Use: High-throughput screening, multiplexed sensing</p>
+      <ul>
+        <li><strong>Electrode diameter:</strong> 1–5mm (2mm common)</li>
+        <li><strong>Pitch:</strong> ≥ 3× diameter to minimise crosstalk</li>
+        <li><strong>Min gap:</strong> ≥ 1mm for screen printing</li>
+        <li><strong>Bus bar width:</strong> ≥ 1.5mm</li>
+      </ul>
+      <p class="ref">Ref: Liu et al., Frontiers in Chemistry 2020</p>
+    </div>
+
+    <div class="guide-card">
+      <h4>🌀 Spiral Electrode</h4>
+      <p>Use: Impedance sensors, inductors, heating elements</p>
+      <ul>
+        <li><strong>Turn spacing:</strong> ≥ trace width (no overlap)</li>
+        <li><strong>Turns:</strong> 3–10; more = higher impedance</li>
+        <li><strong>Outer radius:</strong> ~80% of substrate</li>
+        <li><strong>Inner radius:</strong> ≥ 0.5mm for screen printing</li>
+      </ul>
+      <p class="ref">Ref: Nature Sci. Reports 2024 (spiral-interdigital electrode)</p>
+    </div>
+
+  </div>
+</div>
 </section>
 
-<section class="features" id="guide" style="background:rgba(96,165,250,0.05);">
-    <h2>📋 Design <span>Guide</span></h2>
-    <p style="text-align:center;color:var(--muted);max-width:700px;margin:0 auto 2rem;font-size:0.95rem;">Scientifically validated design rules from peer-reviewed literature. Every default is based on published specifications.</p>
-    <div class="grid">
-        <div class="card" style="border-left:3px solid #60a5fa;">
-            <h3>⚡ Interdigitated (IDE)</h3>
-            <p style="font-size:0.85rem;line-height:1.7;">
-                <strong>Use:</strong> Amperometric/impedimetric biosensors, humidity sensors<br>
-                <strong>Key rule:</strong> Gap ≤ finger width for optimal redox cycling<br>
-                <strong>Typical:</strong> 10-50 pairs, 0.5-2mm fingers, 0.2-1mm gap<br>
-                <strong>Materials:</strong> Au, Pt, C on glass/PET/Kapton<br>
-                <em style="color:#94a3b8;">Ref: Kosri et al., Nanomaterials 2022, 12, 4171</em>
-            </p>
-        </div>
-        <div class="card" style="border-left:3px solid #34d399;">
-            <h3>◉ Three-Electrode System</h3>
-            <p style="font-size:0.85rem;line-height:1.7;">
-                <strong>Use:</strong> Cyclic voltammetry, EIS, battery testing<br>
-                <strong>Key rule:</strong> CE area ≥ 10× WE area (the "10:1 rule")<br>
-                <strong>Typical:</strong> WE=3mm, CE≥9.5mm, RE=2mm, spacing 2-5mm<br>
-                <strong>Materials:</strong> WE=GC/Pt/Au, CE=Pt, RE=Ag/AgCl<br>
-                <em style="color:#94a3b8;">Ref: Ossila Electrode Guide; Harris et al., J. Electrochem. Soc. 2023</em>
-            </p>
-        </div>
-        <div class="card" style="border-left:3px solid #fb923c;">
-            <h3>◎ Ring-Disk Electrode</h3>
-            <p style="font-size:0.85rem;line-height:1.7;">
-                <strong>Use:</strong> Generator-collector experiments, ORR studies<br>
-                <strong>Key rule:</strong> Gap controls collection efficiency (N≈0.256 standard)<br>
-                <strong>Typical:</strong> Disk=5mm, gap=0.375mm, ring=1-2mm wide<br>
-                <strong>Materials:</strong> GC disk, Pt ring (Pine Research standard)<br>
-                <em style="color:#94a3b8;">Ref: Pine Research RRDE Fundamentals; Frumkin & Nekrasov 1959</em>
-            </p>
-        </div>
-        <div class="card" style="border-left:3px solid #a78bfa;">
-            <h3>⌇ Serpentine / ∿ Meander</h3>
-            <p style="font-size:0.85rem;line-height:1.7;">
-                <strong>Use:</strong> Stretchable/wearable electronics, heaters<br>
-                <strong>Key rule:</strong> L/H ratio 1.5-3:1; amplitude ≤ seg_h/2<br>
-                <strong>Typical:</strong> 0.5-1mm trace, 2-5mm segments<br>
-                <strong>Materials:</strong> Ag/Cu ink on TPU/PDMS<br>
-                <em style="color:#94a3b8;">Ref: Suhaimi et al., Results in Physics 2022</em>
-            </p>
-        </div>
-        <div class="card" style="border-left:3px solid #f472b6;">
-            <h3>⊞ Electrode Array</h3>
-            <p style="font-size:0.85rem;line-height:1.7;">
-                <strong>Use:</strong> High-throughput screening, multiplexed sensing<br>
-                <strong>Key rule:</strong> Pitch ≥ 3× electrode diameter to avoid crosstalk<br>
-                <strong>Typical:</strong> 1-5mm electrodes, 6mm+ pitch<br>
-                <strong>Materials:</strong> Carbon, Au, Ag on PET/alumina<br>
-                <em style="color:#94a3b8;">Ref: Liu et al., Frontiers in Chemistry 2020</em>
-            </p>
-        </div>
-        <div class="card" style="border-left:3px solid #22d3ee;">
-            <h3>🌀 Spiral Electrode</h3>
-            <p style="font-size:0.85rem;line-height:1.7;">
-                <strong>Use:</strong> Impedance sensors, inductors, heating elements<br>
-                <strong>Key rule:</strong> Turn spacing ≥ trace width; 3-10 turns typical<br>
-                <strong>Typical:</strong> 0.3-1mm trace, 0.5-2mm spacing, 5-10 turns<br>
-                <strong>Materials:</strong> Au, Ag, C on glass/PET/Kapton<br>
-                <em style="color:#94a3b8;">Ref: MDPI Micromachines 2020, 11, 333</em>
-            </p>
-        </div>
-    </div>
-    <div style="margin-top:2rem;padding:1.5rem;background:var(--surface);border:1px solid var(--border);border-radius:12px;max-width:800px;margin-left:auto;margin-right:auto;">
-        <h3 style="margin-bottom:0.5rem;">🏭 Fabrication Minimum Feature Sizes</h3>
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:0.8rem;font-size:0.85rem;">
-            <div><strong>Screen printing:</strong> 0.2mm min trace/gap</div>
-            <div><strong>Cricut vinyl:</strong> 0.5mm min trace/gap</div>
-            <div><strong>CO₂ laser:</strong> 0.2mm min feature</div>
-            <div><strong>LIG (Kapton):</strong> 0.5mm min (beam diameter)</div>
-            <div><strong>CNC milling:</strong> 0.3mm min trace</div>
-        </div>
-    </div>
-</section>
-
-<section class="types" id="types">
-    <h2>9 Electrode Types</h2>
-    <p class="subtitle">From standard electrochemistry to custom wearables</p>
-    <div class="type-grid">
-        <div class="type-card">
-            <div class="type-icon">⚡</div>
-            <h4>Interdigitated (IDE)</h4>
-            <p>Comb-finger array for sensors</p>
-        </div>
-        <div class="type-card">
-            <div class="type-icon">◉</div>
-            <h4>Three-Electrode</h4>
-            <p>WE/CE/RE for voltammetry</p>
-        </div>
-        <div class="type-card">
-            <div class="type-icon">⌇</div>
-            <h4>Serpentine</h4>
-            <p>Zigzag trace for stretchables</p>
-        </div>
-        <div class="type-card">
-            <div class="type-icon">◎</div>
-            <h4>Ring-Disk</h4>
-            <p>Concentric for collection mode</p>
-        </div>
-        <div class="type-card">
-            <div class="type-icon">⊞</div>
-            <h4>Electrode Array</h4>
-            <p>Grid for high-throughput</p>
-        </div>
-        <div class="type-card">
-            <div class="type-icon">∿</div>
-            <h4>Meander</h4>
-            <p>Spring serpentine for wearables</p>
-        </div>
-        <div class="type-card">
-            <div class="type-icon">⊚</div>
-            <h4>Circular Array</h4>
-            <p>Radial rings with traces</p>
-        </div>
-        <div class="type-card">
-            <div class="type-icon">🌀</div>
-            <h4>Spiral</h4>
-            <p>Archimedean for impedance</p>
-        </div>
-        <div class="type-card">
-            <div class="type-icon">⬡</div>
-            <h4>Custom Polygon</h4>
-            <p>Any shape you define</p>
-        </div>
-    </div>
-</section>
-
-<section class="code-section" id="cli">
-    <h2>Command Line</h2>
-    <p class="subtitle">Full parametric control from the terminal</p>
-    <div class="code-block">
-        <span class="comment"># Generate an interdigitated electrode</span><br>
-        <span class="cmd">python</span> electrode_generator.py <span class="flag">--type</span> ide <span class="flag">--fingers</span> <span class="val">10</span> <span class="flag">--finger-w</span> <span class="val">0.5</span> <span class="flag">--gap</span> <span class="val">0.3</span> \<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;<span class="flag">--finger-l</span> <span class="val">15</span> <span class="flag">--format</span> <span class="val">both</span> <span class="flag">--output</span> <span class="val">my_electrode</span><br><br>
-        <span class="comment"># Generate G-code for laser cutting</span><br>
-        <span class="cmd">python</span> electrode_generator.py <span class="flag">--type</span> spiral <span class="flag">--turns</span> <span class="val">5</span> <span class="flag">--format</span> <span class="val">gcode</span> \<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;<span class="flag">--feed-rate</span> <span class="val">800</span> <span class="flag">--laser-power</span> <span class="val">500</span> <span class="flag">--output</span> <span class="val">spiral_lig</span><br><br>
-        <span class="comment"># Export layers separately for multi-material Cricut</span><br>
-        <span class="cmd">python</span> electrode_generator.py <span class="flag">--type</span> ide <span class="flag">--layers</span> ELECTRODE_A ELECTRODE_B \<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;<span class="flag">--format</span> <span class="val">dxf</span> <span class="flag">--output</span> <span class="val">my_ide_layers</span>
-    </div>
+<!-- ── FEATURES ── -->
+<section class="features">
+<div class="container">
+  <h2>Why <span>ElectrodeForge</span>?</h2>
+  <div class="feat-grid">
+    <div class="feat-card"><div class="icon">🆓</div><h4>100% Free</h4><p>No login, no limits, no paywall. Generate unlimited designs.</p></div>
+    <div class="feat-card"><div class="icon">⚡</div><h4>Instant</h4><p>All processing runs in your browser. No server upload needed.</p></div>
+    <div class="feat-card"><div class="icon">📐</div><h4>Precise</h4><p>Scientifically validated defaults from peer-reviewed literature.</p></div>
+    <div class="feat-card"><div class="icon">🔧</div><h4>Parametric</h4><p>Adjust any dimension. Real-time preview updates instantly.</p></div>
+    <div class="feat-card"><div class="icon">🏭</div><h4>Multi-Format</h4><p>Export DXF (laser), SVG (Cricut), or G-code (CNC).</p></div>
+    <div class="feat-card"><div class="icon">🔬</div><h4>9 Electrode Types</h4><p>IDE, 3-electrode, serpentine, ring-disk, array, and more.</p></div>
+  </div>
+</div>
 </section>
 
 <footer>
-    <p>ElectrodeForge — Free & Open Source Electrode Design<br>
-    Built with Python • <a href="https://ezdxf.readthedocs.io/">ezdxf</a> • <a href="https://svgwrite.readthedocs.io/">svgwrite</a> • <a href="https://flask.palletsprojects.com/">Flask</a><br>
-    <a href="https://github.com/CliffVale/electrodeforge">GitHub</a> • MIT License</p>
+<div class="container">
+  <p>ElectrodeForge — Open source on <a href="https://github.com/CliffVale/electrodeforge">GitHub</a> | Built with ❤️ for electrochemistry</p>
+</div>
 </footer>
 
+<script>
+// ══════════════════════════════════════════════════════════════════════
+// ElectrodeForge — Client-Side Electrode Generator
+// Generates DXF, SVG with live preview. 100% browser-based.
+// ══════════════════════════════════════════════════════════════════════
+
+let currentType = 'ide';
+let currentSVG = '';
+let currentDXF = '';
+
+// ── Default parameters per type ──
+const DEFAULTS = {
+  ide: {w:25,h:25,fingers:10,fw:1.0,gap:0.5,fl:15,pad:3,bus:2,margin:3},
+  three: {w:25,h:25,we:3,ce:6,re:2,spacing:3,pad:3},
+  serpentine: {w:25,h:25,tw:1,segments:8,segL:3,segH:2,pad:3},
+  ringdisk: {w:25,h:25,diskD:5,gap:0.5,ringW:1.5,pad:3},
+  array: {w:25,h:25,rows:4,cols:4,electrodeD:2,pitchX:6,pitchY:6,pad:3},
+  meander: {w:25,h:25,tw:1,segments:6,segL:4,segH:2.5,meanderN:6,meanderAmp:1,pad:3},
+  carray: {w:25,h:25,rings:3,epr:8,electrodeD:2,ringSpacing:5,pad:3},
+  spiral: {w:25,h:25,turns:5,rStart:1,rEnd:10,tw:0.8,pad:3},
+  ide_variants: {w:25,h:20,gaps:'0.5,1.0,1.5,2.0,2.5',ratio:0.5,fl:6,bus:2,pad:3}
+};
+
+// ── Parameter UI definitions ──
+const PARAM_DEFS = {
+  ide: [
+    {id:'w',label:'Width (mm)',min:5,max:100,step:1},
+    {id:'h',label:'Height (mm)',min:5,max:100,step:1},
+    {id:'fingers',label:'Finger Pairs',min:2,max:50,step:1},
+    {id:'fw',label:'Finger Width (mm)',min:0.1,max:5,step:0.1},
+    {id:'gap',label:'Gap (mm)',min:0.1,max:5,step:0.1},
+    {id:'fl',label:'Finger Length (mm)',min:1,max:50,step:0.5},
+    {id:'pad',label:'Pad Size (mm)',min:1,max:10,step:0.5},
+    {id:'bus',label:'Bus Bar (mm)',min:0.5,max:10,step:0.5},
+  ],
+  three: [
+    {id:'w',label:'Width (mm)',min:5,max:100,step:1},
+    {id:'h',label:'Height (mm)',min:5,max:100,step:1},
+    {id:'we',label:'WE Diameter (mm)',min:0.5,max:10,step:0.5},
+    {id:'ce',label:'CE Diameter (mm)',min:1,max:20,step:0.5},
+    {id:'re',label:'RE Diameter (mm)',min:0.5,max:5,step:0.5},
+    {id:'spacing',label:'WE-RE Spacing (mm)',min:1,max:15,step:0.5},
+    {id:'pad',label:'Pad Size (mm)',min:1,max:10,step:0.5},
+  ],
+  serpentine: [
+    {id:'w',label:'Width (mm)',min:5,max:100,step:1},
+    {id:'h',label:'Height (mm)',min:5,max:100,step:1},
+    {id:'tw',label:'Trace Width (mm)',min:0.2,max:3,step:0.1},
+    {id:'segments',label:'Segments',min:2,max:20,step:1},
+    {id:'segL',label:'Segment Length (mm)',min:1,max:10,step:0.5},
+    {id:'segH',label:'Segment Height (mm)',min:0.5,max:5,step:0.5},
+    {id:'pad',label:'Pad Size (mm)',min:1,max:10,step:0.5},
+  ],
+  ringdisk: [
+    {id:'w',label:'Width (mm)',min:5,max:100,step:1},
+    {id:'h',label:'Height (mm)',min:5,max:100,step:1},
+    {id:'diskD',label:'Disk Diameter (mm)',min:1,max:15,step:0.5},
+    {id:'gap',label:'Gap (mm)',min:0.1,max:3,step:0.1},
+    {id:'ringW',label:'Ring Width (mm)',min:0.5,max:5,step:0.1},
+    {id:'pad',label:'Pad Size (mm)',min:1,max:10,step:0.5},
+  ],
+  array: [
+    {id:'w',label:'Width (mm)',min:5,max:100,step:1},
+    {id:'h',label:'Height (mm)',min:5,max:100,step:1},
+    {id:'rows',label:'Rows',min:1,max:10,step:1},
+    {id:'cols',label:'Columns',min:1,max:10,step:1},
+    {id:'electrodeD',label:'Electrode Ø (mm)',min:0.5,max:10,step:0.5},
+    {id:'pitchX',label:'Pitch X (mm)',min:1,max:20,step:0.5},
+    {id:'pitchY',label:'Pitch Y (mm)',min:1,max:20,step:0.5},
+    {id:'pad',label:'Pad Size (mm)',min:1,max:10,step:0.5},
+  ],
+  meander: [
+    {id:'w',label:'Width (mm)',min:5,max:100,step:1},
+    {id:'h',label:'Height (mm)',min:5,max:100,step:1},
+    {id:'tw',label:'Trace Width (mm)',min:0.2,max:3,step:0.1},
+    {id:'segments',label:'Segments',min:2,max:15,step:1},
+    {id:'segL',label:'Segment Length (mm)',min:1,max:10,step:0.5},
+    {id:'segH',label:'Segment Height (mm)',min:0.5,max:5,step:0.5},
+    {id:'meanderN',label:'Waves/Segment',min:2,max:15,step:1},
+    {id:'meanderAmp',label:'Amplitude (mm)',min:0.1,max:3,step:0.1},
+    {id:'pad',label:'Pad Size (mm)',min:1,max:10,step:0.5},
+  ],
+  carray: [
+    {id:'w',label:'Width (mm)',min:5,max:100,step:1},
+    {id:'h',label:'Height (mm)',min:5,max:100,step:1},
+    {id:'rings',label:'Rings',min:1,max:5,step:1},
+    {id:'epr',label:'Electrodes/Ring',min:4,max:16,step:1},
+    {id:'electrodeD',label:'Electrode Ø (mm)',min:0.5,max:5,step:0.5},
+    {id:'ringSpacing',label:'Ring Spacing (mm)',min:1,max:15,step:0.5},
+    {id:'pad',label:'Pad Size (mm)',min:1,max:10,step:0.5},
+  ],
+  spiral: [
+    {id:'w',label:'Width (mm)',min:5,max:100,step:1},
+    {id:'h',label:'Height (mm)',min:5,max:100,step:1},
+    {id:'turns',label:'Turns',min:1,max:20,step:1},
+    {id:'rStart',label:'Inner Radius (mm)',min:0.1,max:10,step:0.5},
+    {id:'rEnd',label:'Outer Radius (mm)',min:1,max:50,step:0.5},
+    {id:'tw',label:'Trace Width (mm)',min:0.1,max:3,step:0.1},
+    {id:'pad',label:'Pad Size (mm)',min:1,max:10,step:0.5},
+  ],
+  ide_variants: [
+    {id:'w',label:'Substrate W (mm)',min:10,max:50,step:1},
+    {id:'h',label:'Substrate H (mm)',min:10,max:50,step:1},
+    {id:'ratio',label:'Metallization Ratio',min:0.1,max:0.9,step:0.05},
+    {id:'fl',label:'Finger Length (mm)',min:2,max:20,step:0.5},
+    {id:'bus',label:'Bus Bar (mm)',min:0.5,max:5,step:0.5},
+    {id:'pad',label:'Pad Size (mm)',min:1,max:10,step:0.5},
+  ]
+};
+
+// ── Type selection ──
+function selectType(type) {
+  currentType = type;
+  document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`[data-type="${type}"]`).classList.add('active');
+  buildParams(type);
+  preview();
+}
+
+// ── Build parameter UI ──
+function buildParams(type) {
+  const c = document.getElementById('params-container');
+  const defs = PARAM_DEFS[type] || [];
+  const defaults = DEFAULTS[type] || {};
+  let html = '';
+  for (const d of defs) {
+    const val = defaults[d.id] !== undefined ? defaults[d.id] : d.min;
+    if (type === 'ide_variants' && d.id === 'w') {
+      html += `<div class="param-group"><label>${d.label} <span id="v_${d.id}">${val}</span></label>
+        <input type="number" id="p_${d.id}" value="${val}" min="${d.min}" max="${d.max}" step="${d.step}" onchange="preview()"></div>`;
+    } else if (type === 'ide_variants' && d.id === 'h') {
+      html += `<div class="param-group"><label>${d.label} <span id="v_${d.id}">${val}</span></label>
+        <input type="number" id="p_${d.id}" value="${val}" min="${d.min}" max="${d.max}" step="${d.step}" onchange="preview()"></div>`;
+    } else {
+      html += `<div class="param-group"><label>${d.label} <span id="v_${d.id}">${val}</span></label>
+        <input type="range" id="p_${d.id}" value="${val}" min="${d.min}" max="${d.max}" step="${d.step}" oninput="document.getElementById('v_${d.id}').textContent=this.value;preview()"></div>`;
+    }
+  }
+  if (type === 'ide_variants') {
+    html += `<div class="param-group"><label>Gaps (comma-separated mm) <span style="color:var(--orange)">fixed</span></label>
+      <input type="text" id="p_gaps" value="0.5,1.0,1.5,2.0,2.5" onchange="preview()"></div>`;
+  }
+  c.innerHTML = html;
+}
+
+// ── Get current params ──
+function getParams() {
+  const p = {};
+  const defs = PARAM_DEFS[currentType] || [];
+  for (const d of defs) {
+    const el = document.getElementById('p_' + d.id);
+    p[d.id] = el ? (d.id === 'gaps' ? el.value : parseFloat(el.value)) : DEFAULTS[currentType][d.id];
+  }
+  return p;
+}
+
+// ── SVG helpers ──
+function svgRect(x,y,w,h,fill,stroke,sw) {
+  return `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${fill||'#000'}" stroke="${stroke||'none'}" stroke-width="${sw||0.02}"/>`;
+}
+function svgCircle(cx,cy,r,fill,stroke,sw) {
+  return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${fill||'#000'}" stroke="${stroke||'none'}" stroke-width="${sw||0.02}"/>`;
+}
+function svgPoly(pts,fill,stroke,sw) {
+  const d = pts.map((p,i)=>(i===0?'M':'L')+p[0]+','+p[1]).join(' ')+' Z';
+  return `<path d="${d}" fill="${fill||'#000'}" stroke="${stroke||'none'}" stroke-width="${sw||0.02}"/>`;
+}
+function svgLine(x1,y1,x2,y2,stroke,sw) {
+  return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${stroke||'#000'}" stroke-width="${sw||0.05}"/>`;
+}
+
+// ── DXF helpers ──
+let dxfEntities = [];
+function dxfInit() { dxfEntities = []; }
+function dxfAdd(type, args) { dxfEntities.push({type, ...args}); }
+function dxfPolyline(pts, layer, closed) {
+  dxfAdd('LWPOLYLINE', {pts: pts, layer: layer||'0', closed: closed!==false});
+}
+function dxfCircle(cx,cy,r,layer) {
+  dxfAdd('CIRCLE', {cx,cy,r,layer:layer||'0'});
+}
+function dxfLine(x1,y1,x2,y2,layer) {
+  dxfAdd('LINE', {x1,y1,x2,y2,layer:layer||'0'});
+}
+function dxfRect(x,y,w,h,layer) {
+  dxfPolyline([[x,y],[x+w,y],[x+w,y+h],[x,y+h],[x,y]], layer, true);
+}
+function dxfText(str,x,y,layer,h) {
+  dxfAdd('TEXT', {str,x,y,layer:layer||'0',h:h||0.8});
+}
+
+function dxfBuild() {
+  let out = '0\nSECTION\n2\nENTITIES\n';
+  for (const e of dxfEntities) {
+    if (e.type === 'LWPOLYLINE') {
+      out += '0\nLWPOLYLINE\n8\n' + (e.layer||'0') + '\n90\n' + e.pts.length + '\n70\n' + (e.closed?1:0) + '\n';
+      for (const p of e.pts) out += '10\n' + p[0].toFixed(4) + '\n20\n' + p[1].toFixed(4) + '\n';
+    } else if (e.type === 'CIRCLE') {
+      out += '0\nCIRCLE\n8\n' + (e.layer||'0') + '\n10\n' + e.cx.toFixed(4) + '\n20\n' + e.cy.toFixed(4) + '\n40\n' + e.r.toFixed(4) + '\n';
+    } else if (e.type === 'LINE') {
+      out += '0\nLINE\n8\n' + (e.layer||'0') + '\n10\n' + e.x1.toFixed(4) + '\n20\n' + e.y1.toFixed(4) + '\n11\n' + e.x2.toFixed(4) + '\n21\n' + e.y2.toFixed(4) + '\n';
+    } else if (e.type === 'TEXT') {
+      out += '0\nTEXT\n8\n' + (e.layer||'0') + '\n10\n' + e.x.toFixed(4) + '\n20\n' + e.y.toFixed(4) + '\n40\n' + (e.h||0.8) + '\n1\n' + e.str + '\n';
+    }
+  }
+  out += '0\nENDSEC\n0\nEOF\n';
+  return out;
+}
+
+// ── Circle points ──
+function circlePts(cx,cy,r,n) {
+  const pts = [];
+  for (let i=0; i<=n; i++) {
+    const a = 2*Math.PI*i/n;
+    pts.push([cx+r*Math.cos(a), cy+r*Math.sin(a)]);
+  }
+  return pts;
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// Electrode generators (SVG + DXF)
+// ══════════════════════════════════════════════════════════════════════
+
+function genIDE(p) {
+  const n=p.fingers, fw=p.fw, gap=p.gap, fl=p.fl, ps=p.pad, bw=p.bus, mg=p.margin;
+  const totalW = n*fw+(n-1)*gap;
+  const x0=(p.w-totalW)/2, busTopY=mg+fl+bw, busBotY=mg;
+  let svg='', info='';
+  dxfInit();
+  // Substrate
+  svg+=svgRect(0,0,p.w,p.h,'#f0f0f0','#ccc',0.05);
+  dxfRect(0,0,p.w,p.h,'SUBSTRATE');
+  // Bus A
+  const baX=x0-1, baW=totalW+2;
+  svg+=svgRect(baX,busTopY,baW,bw,'#e74c3c');
+  dxfRect(baX,busTopY,baW,bw,'ELECTRODE_A');
+  // Bus B
+  svg+=svgRect(x0-1,busBotY-bw,totalW+2,bw,'#3498db');
+  dxfRect(x0-1,busBotY-bw,totalW+2,bw,'ELECTRODE_B');
+  // Fingers
+  for (let i=0;i<n;i++) {
+    const fx=x0+i*(fw+gap);
+    if (i%2===0) {
+      svg+=svgRect(fx,busTopY-fl,fw,fl,'#e74c3c');
+      dxfRect(fx,busTopY-fl,fw,fl,'ELECTRODE_A');
+    } else {
+      svg+=svgRect(fx,busBotY,fw,fl,'#3498db');
+      dxfRect(fx,busBotY,fw,fl,'ELECTRODE_B');
+    }
+  }
+  // Pads
+  const paX=baX-ps-1, paY=busTopY+(bw-ps)/2;
+  svg+=svgRect(paX,paY,ps,ps,'#27ae60');
+  dxfRect(paX,paY,ps,ps,'PAD');
+  svg+=svgLine(paX+ps,paY+ps/2,baX,busTopY+bw/2,'#27ae60',0.08);
+  dxfLine(paX+ps,paY+ps/2,baX,busTopY+bw/2,'PAD');
+  const pbX=baX+baW+1, pbY=busBotY-bw+(bw-ps)/2;
+  svg+=svgRect(pbX,pbY,ps,ps,'#27ae60');
+  dxfRect(pbX,pbY,ps,ps,'PAD');
+  svg+=svgLine(pbX,pbY+ps/2,baX+baW,busBotY-bw/2,'#27ae60',0.08);
+  dxfLine(pbX,pbY+ps/2,baX+baW,busBotY-bw/2,'PAD');
+  currentSVG = `<svg viewBox="0 0 ${p.w} ${p.h}" xmlns="http://www.w3.org/2000/svg">${svg}</svg>`;
+  info = `<span class="tag dxf">DXF</span><span class="tag svg">SVG</span> IDE: ${n} pairs, fw=${fw}mm, gap=${gap}mm, fl=${fl}mm<br>Metallization: ${(fw/(fw+gap)).toFixed(2)} | Pitch: ${(fw+gap).toFixed(1)}mm | Bus: ${bw}mm | Pad: ${ps}mm`;
+  return info;
+}
+
+function genThree(p) {
+  const cx=p.w/2, cy=p.h/2, weR=p.we/2, ceGap=0.3, ceRI=weR+ceGap, ceRO=ceRI+p.ce/2, reR=p.re/2;
+  const reCX=cx-p.spacing, reCY=cy;
+  let svg='';
+  dxfInit();
+  svg+=svgRect(0,0,p.w,p.h,'#f0f0f0','#ccc',0.05);
+  dxfRect(0,0,p.w,p.h,'SUBSTRATE');
+  // CE ring
+  svg+=svgCircle(cx,cy,ceRO,'#3498db');dxfCircle(cx,cy,ceRO,'CE');
+  svg+=svgCircle(cx,cy,ceRI,'#f0f0f0');dxfCircle(cx,cy,ceRI,'CE');
+  // WE
+  svg+=svgCircle(cx,cy,weR,'#e74c3c');dxfCircle(cx,cy,weR,'WE');
+  // RE
+  svg+=svgCircle(reCX,reCY,reR,'#27ae60');dxfCircle(reCX,reCY,reR,'RE');
+  // Pads
+  const ps=p.pad;
+  const wpx=cx+ceRO+2, wpy=cy-ps/2;
+  svg+=svgRect(wpx,wpy,ps,ps,'#888');dxfRect(wpx,wpy,ps,ps,'PAD');
+  svg+=svgLine(cx+weR,cy,wpx,wpy+ps/2,'#888',0.08);dxfLine(cx+weR,cy,wpx,wpy+ps/2,'TRACE');
+  const cpx=cx-ps/2, cpy=cy+ceRO+2;
+  svg+=svgRect(cpx,cpy,ps,ps,'#888');dxfRect(cpx,cpy,ps,ps,'PAD');
+  svg+=svgLine(cx,cy+ceRO,cpx+ps/2,cpy,'#888',0.08);dxfLine(cx,cy+ceRO,cpx+ps/2,cpy,'TRACE');
+  const rpx=reCX-reR-2-ps, rpy=reCY-ps/2;
+  svg+=svgRect(rpx,rpy,ps,ps,'#888');dxfRect(rpx,rpy,ps,ps,'PAD');
+  svg+=svgLine(reCX-reR,reCY,rpx+ps,rpy+ps/2,'#888',0.08);dxfLine(reCX-reR,reCY,rpx+ps,rpy+ps/2,'TRACE');
+  currentSVG=`<svg viewBox="0 0 ${p.w} ${p.h}" xmlns="http://www.w3.org/2000/svg">${svg}</svg>`;
+  return `<span class="tag dxf">DXF</span><span class="tag svg">SVG</span> WE=${p.we}mm, CE=${p.ce}mm, RE=${p.re}mm<br>CE/WE area ratio: ${(Math.PI*(p.ce/2)**2/(Math.PI*(p.we/2)**2)).toFixed(1)}:1 | Spacing: ${p.spacing}mm`;
+}
+
+function genSerpentine(p) {
+  const n=p.segments, sl=p.segL, sh=p.segH, tw=p.tw, ps=p.pad;
+  const totalH=n*sh, x0=(p.w-sl)/2, y0=(p.h-totalH)/2;
+  let path=[], y=y0;
+  for (let i=0;i<n;i++) {
+    if (i%2===0) { path.push([x0,y]);path.push([x0+sl,y]);y+=sh;path.push([x0+sl,y]); }
+    else { path.push([x0+sl,y]);path.push([x0,y]);y+=sh;path.push([x0,y]); }
+  }
+  let svg='';
+  dxfInit();
+  svg+=svgRect(0,0,p.w,p.h,'#f0f0f0','#ccc',0.05);dxfRect(0,0,p.w,p.h,'SUBSTRATE');
+  const px=x0-ps-1, py=y0+sh/2-ps/2;
+  svg+=svgRect(px,py,ps,ps,'#27ae60');dxfRect(px,py,ps,ps,'PAD');
+  svg+=svgPoly(path,'#e74c3c','#c0392b',0.05);dxfPolyline(path,'TRACE',false);
+  currentSVG=`<svg viewBox="0 0 ${p.w} ${p.h}" xmlns="http://www.w3.org/2000/svg">${svg}</svg>`;
+  return `<span class="tag dxf">DXF</span><span class="tag svg">SVG</span> Serpentine: ${n} segments, ${sl}×${sh}mm<br>Trace: ${tw}mm | L/H ratio: ${(sl/sh).toFixed(1)}:1`;
+}
+
+function genRingDisk(p) {
+  const cx=p.w/2, cy=p.h/2, diskR=p.diskD/2, rInner=diskR+p.gap, rOuter=rInner+p.ringW;
+  let svg='';
+  dxfInit();
+  svg+=svgRect(0,0,p.w,p.h,'#f0f0f0','#ccc',0.05);dxfRect(0,0,p.w,p.h,'SUBSTRATE');
+  svg+=svgCircle(cx,cy,rOuter,'#3498db');dxfCircle(cx,cy,rOuter,'RING');
+  svg+=svgCircle(cx,cy,rInner,'#f0f0f0');dxfCircle(cx,cy,rInner,'RING');
+  svg+=svgCircle(cx,cy,diskR,'#e74c3c');dxfCircle(cx,cy,diskR,'DISK');
+  const ps=p.pad;
+  const dpx=cx-rOuter-3-ps, dpy=cy-ps/2;
+  svg+=svgRect(dpx,dpy,ps,ps,'#888');dxfRect(dpx,dpy,ps,ps,'PAD');
+  svg+=svgLine(cx-diskR,cy,dpx+ps,cy,'#888',0.08);dxfLine(cx-diskR,cy,dpx+ps,cy,'TRACE');
+  const rpx=cx+rOuter+3, rpy=cy-ps/2;
+  svg+=svgRect(rpx,rpy,ps,ps,'#888');dxfRect(rpx,rpy,ps,ps,'PAD');
+  svg+=svgLine(cx+rOuter,cy,rpx,cy,'#888',0.08);dxfLine(cx+rOuter,cy,rpx,cy,'TRACE');
+  currentSVG=`<svg viewBox="0 0 ${p.w} ${p.h}" xmlns="http://www.w3.org/2000/svg">${svg}</svg>`;
+  const N = (1 - (3*Math.PI/4)*(diskR/rOuter)**4) / (1 - (diskR/rOuter)**2);
+  return `<span class="tag dxf">DXF</span><span class="tag svg">SVG</span> Ring-Disk: disk=${p.diskD}mm, gap=${p.gap}mm, ring=${p.ringW}mm<br>Collection eff. N≈${N.toFixed(3)} | Ring Ø=${(rOuter*2).toFixed(1)}mm`;
+}
+
+function genArray(p) {
+  const {rows,cols,electrodeD:ed,pitchX:px,pitchY:py,pad:ps}=p;
+  const arrayW=(cols-1)*px, arrayH=(rows-1)*py;
+  const x0=(p.w-arrayW)/2, y0=(p.h-arrayH)/2;
+  const busY=y0-3, busX=x0-2, busW=arrayW+4, busH=1.5;
+  let svg='';
+  dxfInit();
+  svg+=svgRect(0,0,p.w,p.h,'#f0f0f0','#ccc',0.05);dxfRect(0,0,p.w,p.h,'SUBSTRATE');
+  svg+=svgRect(busX,busY,busW,busH,'#3498db');dxfRect(busX,busY,busW,busH,'BUS');
+  for (let r=0;r<rows;r++) for (let c=0;c<cols;c++) {
+    const ex=x0+c*px, ey=y0+r*py;
+    svg+=svgCircle(ex,ey,ed/2,'#e74c3c');dxfCircle(ex,ey,ed/2,'ELECTRODES');
+    svg+=svgLine(ex,ey-ed/2,ex,busY+busH,'#888',0.05);dxfLine(ex,ey-ed/2,ex,busY+busH,'TRACE');
+  }
+  const padX=busX-ps-1, padY=busY+(busH-ps)/2;
+  svg+=svgRect(padX,padY,ps,ps,'#27ae60');dxfRect(padX,padY,ps,ps,'PAD');
+  svg+=svgLine(padX+ps,padY+ps/2,busX,busY+busH/2,'#27ae60',0.08);dxfLine(padX+ps,padY+ps/2,busX,busY+busH/2,'PAD');
+  currentSVG=`<svg viewBox="0 0 ${p.w} ${p.h}" xmlns="http://www.w3.org/2000/svg">${svg}</svg>`;
+  return `<span class="tag dxf">DXF</span><span class="tag svg">SVG</span> Array: ${rows}×${cols} = ${rows*cols} electrodes<br>Ø=${ed}mm | Pitch: ${px}×${py}mm | Pitch/diameter: ${(px/ed).toFixed(1)}:1`;
+}
+
+function genMeander(p) {
+  const n=p.segments, sl=p.segL, sh=p.segH, tw=p.tw, mN=p.meanderN, mA=p.meanderAmp, ps=p.pad;
+  const totalH=n*sh, x0=(p.w-sl)/2, y0=(p.h-totalH)/2;
+  let path=[];
+  for (let i=0;i<n;i++) {
+    const sy=y0+i*sh;
+    if (i%2===0) {
+      for (let j=0;j<=mN*4;j++) {
+        const t=j/(mN*4);
+        path.push([x0+t*sl, sy+sh/2+Math.sin(t*mN*2*Math.PI)*mA]);
+      }
+    } else {
+      for (let j=0;j<=mN*4;j++) {
+        const t=j/(mN*4);
+        path.push([x0+sl-t*sl, sy+sh/2+Math.sin(t*mN*2*Math.PI)*mA]);
+      }
+    }
+  }
+  let svg='';
+  dxfInit();
+  svg+=svgRect(0,0,p.w,p.h,'#f0f0f0','#ccc',0.05);dxfRect(0,0,p.w,p.h,'SUBSTRATE');
+  const px=x0-ps-1, py2=y0+sh/2-ps/2;
+  svg+=svgRect(px,py2,ps,ps,'#27ae60');dxfRect(px,py2,ps,ps,'PAD');
+  svg+=svgPoly(path.map((p,i)=>[p[0],p[1]]).concat([path[0]]),'none','#e74c3c',0.08);
+  dxfPolyline(path,'TRACE',false);
+  currentSVG=`<svg viewBox="0 0 ${p.w} ${p.h}" xmlns="http://www.w3.org/2000/svg">${svg}</svg>`;
+  return `<span class="tag dxf">DXF</span><span class="tag svg">SVG</span> Meander: ${n} segments, ${mN} waves/seg<br>Amplitude: ${mA}mm | Segment: ${sl}×${sh}mm | L/H: ${(sl/sh).toFixed(1)}:1`;
+}
+
+function genCArray(p) {
+  const cx=p.w/2, cy=p.h/2, ps=p.pad;
+  let svg='';
+  dxfInit();
+  svg+=svgRect(0,0,p.w,p.h,'#f0f0f0','#ccc',0.05);dxfRect(0,0,p.w,p.h,'SUBSTRATE');
+  // Centre electrode
+  svg+=svgCircle(cx,cy,p.electrodeD/2,'#3498db');dxfCircle(cx,cy,p.electrodeD/2,'CENTRE');
+  for (let r=1;r<=p.rings;r++) {
+    const ringR=r*p.ringSpacing;
+    for (let e=0;e<p.epr;e++) {
+      const a=2*Math.PI*e/p.epr;
+      const ex=cx+ringR*Math.cos(a), ey=cy+ringR*Math.sin(a);
+      svg+=svgCircle(ex,ey,p.electrodeD/2,'#e74c3c');dxfCircle(ex,ey,p.electrodeD/2,'ELECTRODES');
+      svg+=svgLine(ex,ey,cx,cy,'#888',0.03);dxfLine(ex,ey,cx,cy,'TRACE');
+    }
+  }
+  // Pad
+  svg+=svgRect(0,cy-ps/2,ps,ps,'#27ae60');dxfRect(0,cy-ps/2,ps,ps,'PAD');
+  svg+=svgLine(ps,cy,cx-p.electrodeD/2,cy,'#27ae60',0.08);dxfLine(ps,cy,cx-p.electrodeD/2,cy,'TRACE');
+  currentSVG=`<svg viewBox="0 0 ${p.w} ${p.h}" xmlns="http://www.w3.org/2000/svg">${svg}</svg>`;
+  return `<span class="tag dxf">DXF</span><span class="tag svg">SVG</span> Circular Array: ${p.rings} rings × ${p.epr} electrodes<br>Ø=${p.electrodeD}mm | Spacing: ${p.ringSpacing}mm | Total: ${p.rings*p.epr+1} electrodes`;
+}
+
+function genSpiral(p) {
+  const cx=p.w/2, cy=p.h/2, ps=p.pad, nPts=200;
+  let path=[];
+  for (let i=0;i<=nPts;i++) {
+    const t=i/nPts, a=t*p.turns*2*Math.PI;
+    const r=p.rStart+t*(p.rEnd-p.rStart);
+    path.push([cx+r*Math.cos(a), cy+r*Math.sin(a)]);
+  }
+  let svg='';
+  dxfInit();
+  svg+=svgRect(0,0,p.w,p.h,'#f0f0f0','#ccc',0.05);dxfRect(0,0,p.w,p.h,'SUBSTRATE');
+  svg+=svgPoly(path,'none','#e74c3c',0.08);dxfPolyline(path,'SPIRAL',false);
+  // Pad at center
+  svg+=svgRect(cx-ps/2,cy-ps/2,ps,ps,'#27ae60');dxfRect(cx-ps/2,cy-ps/2,ps,ps,'PAD');
+  // Outer pad
+  svg+=svgRect(cx+p.rEnd+2,cy-ps/2,ps,ps,'#27ae60');dxfRect(cx+p.rEnd+2,cy-ps/2,ps,ps,'PAD');
+  svg+=svgLine(cx+p.rEnd*Math.cos(0),cy+p.rEnd*Math.sin(0),cx+p.rEnd+2,cy,'#888',0.08);
+  dxfLine(cx+p.rEnd,cy,cx+p.rEnd+2,cy,'TRACE');
+  currentSVG=`<svg viewBox="0 0 ${p.w} ${p.h}" xmlns="http://www.w3.org/2000/svg">${svg}</svg>`;
+  return `<span class="tag dxf">DXF</span><span class="tag svg">SVG</span> Spiral: ${p.turns} turns, r=${p.rStart}–${p.rEnd}mm<br>Trace: ${p.tw}mm | Turn spacing: ${((p.rEnd-p.rStart)/p.turns).toFixed(2)}mm`;
+}
+
+function genIDEVariants(p) {
+  const gaps = p.gaps.split(',').map(Number).filter(g=>g>0);
+  const ratio = p.ratio || 0.5;
+  const fl = p.fl || 6;
+  const bw = p.bus || 2;
+  const ps = p.pad || 3;
+  const overlapW = 20, overlapH = 10;
+  const subW = p.w || 25, subH = p.h || 20;
+
+  // Generate all 5 variants in a horizontal strip
+  const totalW = gaps.length * (subW + 5) - 5;
+  let svg = '';
+  dxfInit();
+
+  let info = '<span class="tag dxf">DXF</span><span class="tag svg">SVG</span> <strong>5 IDE Variants</strong><br>';
+
+  for (let gi=0; gi<gaps.length; gi++) {
+    const gap = gaps[gi];
+    const fw = gap; // ratio = fw/(fw+gap) = 0.5 → fw = gap
+    const pitch = fw + gap;
+    const met = fw / pitch;
+    const nFingers = Math.floor(overlapW / pitch);
+    const actualW = nFingers * pitch;
+    const ox = gi * (subW + 5); // offset X for each variant
+
+    const x0 = ox + (subW - actualW) / 2;
+    const busTopY = 2 + fl + bw;
+    const busBotY = 2;
+
+    // Substrate
+    svg += svgRect(ox, 0, subW, subH, '#f0f0f0', '#ccc', 0.05);
+
+    // Bus A
+    const baX = x0 - 1, baW = actualW + 2;
+    svg += svgRect(baX, busTopY, baW, bw, '#e74c3c');
+
+    // Bus B
+    svg += svgRect(x0 - 1, busBotY - bw, actualW + 2, bw, '#3498db');
+
+    // Fingers
+    for (let i = 0; i < nFingers; i++) {
+      const fx = x0 + i * pitch;
+      if (i % 2 === 0) {
+        svg += svgRect(fx, busTopY - fl, fw, fl, '#e74c3c');
+        dxfRect(fx, busTopY - fl, fw, fl, 'ELECTRODE_A');
+      } else {
+        svg += svgRect(fx, busBotY, fw, fl, '#3498db');
+        dxfRect(fx, busBotY, fw, fl, 'ELECTRODE_B');
+      }
+    }
+
+    // Pads
+    const paX = baX - ps - 1, paY = busTopY + (bw - ps) / 2;
+    svg += svgRect(paX, paY, ps, ps, '#27ae60');
+    svg += svgLine(paX + ps, paY + ps / 2, baX, busTopY + bw / 2, '#27ae60', 0.05);
+    const pbX = baX + baW + 1, pbY = busBotY - bw + (bw - ps) / 2;
+    svg += svgRect(pbX, pbY, ps, ps, '#27ae60');
+    svg += svgLine(pbX, pbY + ps / 2, baX + baW, busBotY - bw / 2, '#27ae60', 0.05);
+
+    // DXF entities
+    dxfRect(ox, 0, subW, subH, 'SUBSTRATE');
+    dxfRect(baX, busTopY, baW, bw, 'ELECTRODE_A');
+    dxfRect(x0 - 1, busBotY - bw, actualW + 2, bw, 'ELECTRODE_B');
+    dxfRect(paX, paY, ps, ps, 'PAD');
+    dxfLine(paX + ps, paY + ps / 2, baX, busTopY + bw / 2, 'PAD');
+    dxfRect(pbX, pbY, ps, ps, 'PAD');
+    dxfLine(pbX, pbY + ps / 2, baX + baW, busBotY - bw / 2, 'PAD');
+
+    info += `Gap=${gap}mm FW=${fw}mm Pitch=${pitch}mm Met=${met.toFixed(2)} #${nFingers}<br>`;
+  }
+
+  currentSVG = `<svg viewBox="-1 -1 ${totalW + 2} ${subH + 2}" xmlns="http://www.w3.org/2000/svg">${svg}</svg>`;
+  return info;
+}
+
+// ── Main generate function ──
+function generate() {
+  const p = getParams();
+  switch (currentType) {
+    case 'ide': return genIDE(p);
+    case 'three': return genThree(p);
+    case 'serpentine': return genSerpentine(p);
+    case 'ringdisk': return genRingDisk(p);
+    case 'array': return genArray(p);
+    case 'meander': return genMeander(p);
+    case 'carray': return genCArray(p);
+    case 'spiral': return genSpiral(p);
+    case 'ide_variants': return genIDEVariants(p);
+    default: return 'Unknown type';
+  }
+}
+
+// ── Preview ──
+function preview() {
+  const info = generate();
+  document.getElementById('preview-container').innerHTML = currentSVG;
+  document.getElementById('preview-info').innerHTML = info;
+}
+
+// ── Download DXF ──
+function downloadDXF() {
+  generate(); // ensure DXF is built
+  const dxfContent = dxfBuild();
+  const blob = new Blob([dxfContent], {type: 'application/dxf'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `electrodeforge_${currentType}.dxf`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ── Download SVG ──
+function downloadSVG() {
+  generate();
+  const blob = new Blob([currentSVG], {type: 'image/svg+xml'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `electrodeforge_${currentType}.svg`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ── Init ──
+buildParams('ide');
+preview();
+</script>
 </body>
 </html>
