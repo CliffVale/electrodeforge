@@ -37,7 +37,7 @@ Describe your electrode → get a fabrication-ready file. No CAD skills needed.
 
 ```bash
 # Clone and setup
-git clone https://github.com/YOUR_USERNAME/electrodeforge.git
+git clone https://github.com/CliffVale/electrodeforge.git
 cd electrodeforge
 python -m venv .venv && source .venv/bin/activate
 pip install ezdxf svgwrite flask
