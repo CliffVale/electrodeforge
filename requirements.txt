@@ -1,4 +1,4 @@
 ezdxf>=1.0.0
-svgwrite>=1.4.0
+svgwrite>=1.4.3
 flask>=3.0.0
 waitress>=3.0.0
